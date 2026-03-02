@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | SpiceSpark</title>
+    <link rel="stylesheet" href="user/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body style="display: flex; align-items: center; justify-content: center; background: #f1f5f9;">
+
+    <div class="recipe-card" style="width: 100%; max-width: 400px; border-left: 6px solid #f97316;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 style="color: #0f172a;"><i class="fas fa-utensils"></i> JoinSpiceSpark</h2>
+            <p style="color: #64748b;">Create an account to start cooking</p>
+        </div>
+
+        <form id="registerForm">
+            <div class="field">
+                <label>Email Address</label>
+                <input type="email" id="regEmail" placeholder="chef@example.com" required>
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="regPass" placeholder="••••••••" required>
+            </div>
+            <div class="field">
+                <label>Confirm Password</label>
+                <input type="password" id="confirmPass" placeholder="••••••••" required>
+            </div>
+            
+            <button type="submit" id="regBtn" class="btn-primary">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
+            Already have an account? <a href="login.html" style="color: #f97316; font-weight: 600;">Login here</a>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('registerForm').onsubmit = async (e) => {
+        // 1. Prevent the page from reloading
+        e.preventDefault();
+
+        // 2. Get the input values
+        const email = document.getElementById('regEmail').value;
+        const password = document.getElementById('regPass').value;
+        const confirmPassword = document.getElementById('confirmPass').value;
+        const btn = document.getElementById('regBtn');
+
+        // 3. Simple Client-side validation
+        if (password !== confirmPassword) {
+            alert("❌ Passwords do not match!");
+            return;
+        }
+
+        // 4. Visual feedback: Disable button and show loading state
+        btn.disabled = true;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Creating Account...';
+
+        try {
+            // 5. Send data to the server
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, confirmPassword })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                // 6. Success! Show message and redirect
+                alert("✅ " + data.message);
+                window.location.href = "login.html";
+            } else {
+                // 7. Handle server errors (e.g., email already exists)
+                alert("⚠️ " + data.error);
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        } catch (err) {
+            // 8. Handle network/connection errors
+            console.error("Registration error:", err);
+            alert("❌ Could not connect to the server. Please ensure the server is running.");
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    };
+</script>
+</body>
+</html>

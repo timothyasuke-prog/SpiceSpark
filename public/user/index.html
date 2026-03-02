@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SpiceSpark | Professional Kitchen</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2 style="color: #f97316; margin-bottom: 5px;"><i class="fas fa-hat-chef"></i>SpiceSpark</h2>
+        <p id="userDisplay" style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 30px; overflow: hidden; text-overflow: ellipsis;"></p>
+        
+        <div class="nav-item active" id="btn-gen" onclick="showTab('gen')"><i class="fas fa-magic"></i> Generator</div>
+        <div class="nav-item" id="btn-box" onclick="showTab('box')"><i class="fas fa-book-heart"></i> My Recipe Box</div>
+        <div class="nav-item" onclick="logout()" style="margin-top: auto; color: #ef4444;"><i class="fas fa-sign-out-alt"></i> Logout</div>
+    </aside>
+
+    <main class="main-panel">
+        <div id="gen" class="tab-content tab-active">
+            <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Executive Kitchen</h1>
+            <p style="color: #64748b; margin-bottom: 30px;">Enter ingredients to receive a detailed step-by-step lesson.</p>
+            
+            <div class="recipe-card" style="margin-bottom: 40px;">
+                <input type="text" id="ingredients" placeholder="What are we cooking with? (e.g. Eggs, Oil, Salt)" style="width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 1rem;">
+                <div style="margin-top: 20px; display: flex; gap: 15px;">
+                    <select id="cuisine" class="fancy-select"><option>Global</option><option>French</option><option>Italian</option></select>
+                    <select id="dietary" class="fancy-select"><option>No Restriction</option><option>Vegan</option><option>Keto</option></select>
+                    <button class="btn-primary" onclick="generate()" style="flex:1;">Compose Lesson</button>
+                </div>
+            </div>
+
+            <div id="output"></div>
+        </div>
+
+        <div id="box" class="tab-content">
+            <h1>My Recipe Box</h1>
+            <div id="savedContainer" class="grid-2"></div>
+        </div>
+    </main>
+
+    <script>
+        // --- 1. SECURITY LOCK ---
+        const userEmail = localStorage.getItem('userEmail');
+        
+        if (!userEmail || userEmail === "null") {
+            alert("Security: Please login to access the Generation Room.");
+            window.location.href = "../login.html";
+        } else {
+            document.getElementById('userDisplay').innerText = "Logged in as: " + userEmail;
+        }
+
+        // --- 2. NAVIGATION ---
+        function showTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('tab-active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('tab-active');
+            document.getElementById('btn-' + id).classList.add('active');
+            if(id === 'box') loadSaved();
+        }
+
+        // --- 3. GENERATION ---
+        async function generate() {
+            const output = document.getElementById('output');
+            output.innerHTML = `
+                <div class="recipe-card" style="text-align:center; padding: 50px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:3rem; color:#f97316;"></i>
+                    <h3 style="margin-top:20px;">ChefNova is writing your recipe...</h3>
+                </div>`;
+
+            try {
+                const res = await fetch('/api/generate-recipe', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        ingredients: document.getElementById('ingredients').value, 
+                        userEmail: userEmail, // Stored from Login
+                        cuisine: document.getElementById('cuisine').value, 
+                        dietary: document.getElementById('dietary').value 
+                    })
+                });
+
+                if (res.status === 401) {
+                    alert("Session expired. Logging out.");
+                    logout();
+                    return;
+                }
+
+                const data = await res.json();
+                
+                const lines = data.recipes.split('\n');
+                const title = lines.find(l => l.startsWith('TITLE:'))?.replace('TITLE:', '').trim() || "YOUR RECIPE";
+                const stats = lines.find(l => l.startsWith('STATS:'))?.replace('STATS:', '').trim() || "";
+                const body = data.recipes.split('\n').slice(2).join('\n');
+
+                const formatted = body
+                    .replace(/### (.*)/g, '<h3 class="section-header">$1</h3>')
+                    .replace(/\[ \]/g, '<input type="checkbox" class="ingredient-check">')
+                    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>');
+
+                output.innerHTML = `
+                    <div class="recipe-card animated-in">
+                        <h1 class="recipe-title">${title}</h1>
+                        <div class="stats-bar">${stats}</div>
+                        <div class="recipe-content" id="recipeText">${formatted}</div>
+                        <div class="recipe-actions" style="margin-top:25px; display:flex; gap:10px;">
+                            <button onclick="saveToBox('${title}')" class="btn-primary" style="background:#10b981;"><i class="fas fa-heart"></i> Save to Box</button>
+                            <button onclick="downloadPDF('${title}')" class="btn-primary" style="background:#3b82f6;"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                        </div>
+                    </div>`;
+            } catch (err) {
+                output.innerHTML = `<div class="recipe-card">Error: Failed to reach the chef.</div>`;
+            }
+        }
+
+        // --- 4. EXTRAS ---
+        function downloadPDF(title) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const text = document.getElementById('recipeText').innerText;
+            doc.setFontSize(20);
+            doc.text(title, 20, 20);
+            doc.setFontSize(10);
+            const split = doc.splitTextToSize(text, 170);
+            doc.text(split, 20, 30);
+            doc.save(`${title}.pdf`);
+        }
+
+        async function saveToBox(title) {
+            const content = document.getElementById('recipeText').innerText;
+            await fetch('/api/user/save-recipe', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ email: userEmail, title, content })
+            });
+            alert("Recipe saved to your box!");
+        }
+
+        async function loadSaved() {
+            const res = await fetch(`/api/user/my-recipes/${userEmail}`);
+            const recipes = await res.json();
+            document.getElementById('savedContainer').innerHTML = recipes.map(r => `
+                <div class="recipe-card">
+                    <h3 style="margin-top:0;">${r.title}</h3>
+                    <p style="font-size:0.8rem; color:#64748b;">${r.content.substring(0, 80)}...</p>
+                </div>
+            `).join('');
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "../login.html";
+        }
+    </script>
+</body>
+</html>
