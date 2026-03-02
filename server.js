@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const path = require('path');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const Groq = require('groq-sdk');
 const cors = require('cors');
 
@@ -53,6 +55,76 @@ app.post('/api/auth/login', async (req, res) => {
         res.json({ email: user.email, redirect: "/user/index.html" });
     } catch (err) {
         res.status(500).json({ error: "Login process failed." });
+    }
+});
+
+// --- PASSWORD RESET HELPERS ---
+// create a transporter if SMTP settings are provided, otherwise we'll fallback to console.log
+let mailTransporter = null;
+if (process.env.SMTP_HOST && process.env.SMTP_USER) {
+    mailTransporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT || 587,
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS
+        }
+    });
+}
+
+// send reset link either by email or by logging the URL
+async function sendResetEmail(to, token) {
+    const link = `https://spicespark.onrender.com/reset-password.html?token=${token}`;
+    if (mailTransporter) {
+        await mailTransporter.sendMail({
+            from: process.env.SMTP_FROM || 'no-reply@spicespark.onrender.com',
+            to,
+            subject: 'SpiceSpark Password Reset',
+            text: `To reset your password click the following link:\n${link}\nThis link is valid for one hour.`
+        });
+    } else {
+        console.log(`✉️  Reset link for ${to}: ${link}`);
+    }
+}
+
+app.post('/api/auth/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ error: 'No account with that email address exists.' });
+        }
+        const token = crypto.randomBytes(20).toString('hex');
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+        await user.save();
+        await sendResetEmail(email, token);
+        res.json({ message: 'Password reset link sent. Check your email.' });
+    } catch (err) {
+        console.error('Forgot password error:', err);
+        res.status(500).json({ error: 'Unable to process request.' });
+    }
+});
+
+app.post('/api/auth/reset-password', async (req, res) => {
+    try {
+        const { token, password } = req.body;
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+        if (!user) {
+            return res.status(400).json({ error: 'Token is invalid or has expired.' });
+        }
+        user.password = await bcrypt.hash(password, 10);
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+        res.json({ message: 'Password successfully updated.' });
+    } catch (err) {
+        console.error('Reset password error:', err);
+        res.status(500).json({ error: 'Unable to reset password.' });
     }
 });
 

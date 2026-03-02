@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    // fields used for password reset workflow
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
     lastActive: { type: Date, default: Date.now },
     savedRecipes: [{ title: String, content: String }],
     searchHistory: [{
