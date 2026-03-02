@@ -138,6 +138,80 @@ input:focus {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* --- Collapsible sidebar --- */
+.sidebar.collapsed {
+    width: 60px !important;
+    padding: 1rem 0.5rem;
+}
+.sidebar.collapsed h2 {
+    font-size: 0 !important;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.sidebar.collapsed .nav-item {
+    font-size: 0 !important;
+    padding: 12px 0;
+    text-align: center;
+}
+.sidebar.collapsed .nav-item i {
+    font-size: 1.3rem;
+}
+.sidebar.collapsed #sidebar-toggle i {
+    font-size: 1.3rem;
+}
+
+/* toggle button in sidebar */
+#sidebar-toggle {
+    cursor: pointer;
+    color: #f97316;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    background: none;
+    border: none;
+}
+
+/* mobile toggle floating button (hidden by default) */
+.sidebar-toggle-mobile {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* responsive defaults */
+@media (max-width: 768px) {
+    /* sidebar slides offscreen when collapsed on phones */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        transition: left 0.3s;
+        z-index: 999;
+    }
+    .sidebar.collapsed {
+        left: -280px !important;
+        width: 280px !important; /* retain full width when hidden so it slides back correctly */
+        padding: 30px 20px;
+    }
+    .main-panel {
+        padding: 20px;
+    }
+    /* show mobile toggle button */
+    .sidebar-toggle-mobile {
+        display: block;
+    }
+}
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
 * { box-sizing: border-box; }

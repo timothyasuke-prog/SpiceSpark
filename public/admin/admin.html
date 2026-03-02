@@ -24,8 +24,12 @@
     </style>
 </head>
 <body>
+    <button class="sidebar-toggle-mobile" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
     <aside class="sidebar">
+        <button id="sidebar-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
         <h2 style="font-size: 1rem; color: #f97316;"><i class="fas fa-bolt"></i> LIVE PULSE</h2>
         <div id="liveFeed">
             <p style="color: #64748b; font-size: 0.8rem;">Awaiting activity...</p>
@@ -159,6 +163,20 @@
 
         fetchAllData();
         setInterval(fetchAllData, 10000); // Auto-refresh every 10 seconds
+
+        // sidebar toggle/responsive support
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        }
+        function handleResize() {
+            if (window.innerWidth < 768) {
+                document.querySelector('.sidebar').classList.add('collapsed');
+            } else {
+                document.querySelector('.sidebar').classList.remove('collapsed');
+            }
+        }
+        window.addEventListener('resize', handleResize);
+        handleResize();
     </script>
 </body>
 </html>
