@@ -193,25 +193,30 @@ input:focus {
     /* sidebar slides offscreen when collapsed on phones */
     .sidebar {
         position: fixed;
-        left: 0;
+        left: -280px;
         top: 0;
         height: 100%;
         transition: left 0.3s;
         z-index: 999;
+        width: 280px !important;
+        padding: 30px 20px;
+    }
+    .sidebar:not(.collapsed) {
+        left: 0;
     }
     .sidebar.collapsed {
         left: -280px !important;
-        width: 280px !important; /* retain full width when hidden so it slides back correctly */
-        padding: 30px 20px;
     }
     .main-panel {
         padding: 20px;
+        width: 100%;
+        flex: 1;
     }
     /* show mobile toggle button */
     .sidebar-toggle-mobile {
         display: block;
     }
-}
+}}
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
 * { box-sizing: border-box; }

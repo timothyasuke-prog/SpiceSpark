@@ -23,6 +23,16 @@
         /* Wall of Shame Styles */
         .error-row { color: #ef4444; background: #fef2f2; font-family: monospace; font-size: 0.75rem; }
         .status-pill { padding: 4px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            body { display: block; }
+            .sidebar { position: fixed; left: -280px; top: 0; height: 100%; width: 280px; padding: 20px; z-index: 999; transition: left 0.3s; }
+            .sidebar:not(.collapsed) { left: 0; }
+            .sidebar.collapsed { left: -280px !important; }
+            .main-content { padding: 20px; }
+            .grid-3 { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
