@@ -30,6 +30,9 @@
                     <select id="dietary" class="fancy-select"><option>No Restriction</option><option>Vegan</option><option>Keto</option><option>Gluten-Free</option><option>Vegetarian</option><option>Keto</option><option>Dairy-Free</option><option>Nut-Free</option><option>Paleo</option></select>
                     <button class="btn-primary" onclick="generate()" style="flex:1;">Compose Lesson</button>
                 </div>
+                <div style="margin-top: 10px; display:flex; justify-content:center;">
+                    <button id="btn-bored" class="btn-primary" style="background:#ef4444; width:100%; max-width:200px;" onclick="surpriseMe()">🎲 I'm Bored</button>
+                </div>
             </div>
 
             <div id="output"></div>
@@ -114,6 +117,19 @@
             } catch (err) {
                 output.innerHTML = `<div class="recipe-card">Error: Failed to reach the chef.</div>`;
             }
+        }
+
+        // --- 3.5. SURPRISE ME ---
+        function surpriseMe() {
+            const staples = 'salt, water, oil, flour, sugar';
+            const cuisineList = Array.from(document.getElementById('cuisine').options).map(o => o.value);
+            const dietaryList = Array.from(document.getElementById('dietary').options).map(o => o.value);
+            const random = arr => arr[Math.floor(Math.random() * arr.length)];
+
+            document.getElementById('ingredients').value = staples;
+            document.getElementById('cuisine').value = random(cuisineList);
+            document.getElementById('dietary').value = random(dietaryList);
+            generate();
         }
 
         // --- 4. EXTRAS ---
