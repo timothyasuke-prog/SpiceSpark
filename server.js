@@ -28,7 +28,8 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 // --- 1. ROOT REDIRECT (Fixes "Cannot GET /") ---
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+    // Serve a landing page for first-time visitors / logged-out users.
+    res.sendFile(path.join(__dirname, 'public', 'landing.html'));
 });
 
 // --- 2. AUTHENTICATION ROUTES ---

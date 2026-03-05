@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SpiceSpark — Learn. Cook. Enjoy.</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#f97316">
+  <link rel="stylesheet" href="/user/style.css">
+  <style>
+    /* Hero-specific styles for landing page */
+    body { display:flex; align-items:stretch; justify-content:center; min-height:100vh; background: linear-gradient(180deg,#f1f5f9 0%, #ffffff 60%); }
+    .hero { width:100%; max-width:1200px; margin:40px; background:transparent; display:flex; gap:30px; align-items:center; }
+    .hero-card { flex:1; background:transparent; }
+    .hero-visual { flex:1; display:flex; align-items:center; justify-content:center; }
+    .brand { font-size:48px; font-weight:900; color:#0f172a; margin:0 0 10px 0; letter-spacing:-1px; }
+    .tag { color:#64748b; margin-bottom:20px; }
+    .cta { display:flex; gap:12px; margin-top:20px; }
+    .cta .btn-primary { padding:12px 20px; border-radius:12px; font-weight:800; }
+    .decor { width:300px; height:300px; border-radius:20px; background: radial-gradient(circle at 20% 20%, #fff7ed, #f97316 40%, #0f172a 100%); box-shadow: 0 30px 60px rgba(2,6,23,0.08); }
+    footer.landing-footer { width:100%; text-align:center; padding:24px 0; color:#64748b; position:fixed; bottom:0; left:0; background:transparent; }
+    .logo-pill { display:inline-block; padding:8px 12px; background:#0f172a; color:#fff; border-radius:8px; font-weight:800; }
+    @media (max-width:900px){ .hero{flex-direction:column; margin:20px;} .hero-visual{order:-1} }
+  </style>
+</head>
+<body>
+  <main class="hero">
+    <div class="hero-card">
+      <div class="logo-pill">SpiceSpark</div>
+      <h1 class="brand">Learn. Grow. Build delicious meals.</h1>
+      <p class="tag">Enter ingredients and get step-by-step lessons, recipes and tips — perfect for beginners.</p>
+
+      <div class="cta">
+        <a href="/register.html" class="btn-primary">Join</a>
+        <a href="/login.html" class="btn-primary" style="background:#3b82f6">Login</a>
+      </div>
+
+      <p style="margin-top:18px; color:#94a3b8; font-size:0.95rem;">No sign-up required to browse some features — registration keeps your recipes safe.</p>
+    </div>
+
+    <div class="hero-visual">
+      <div class="decor" aria-hidden="true"></div>
+    </div>
+  </main>
+
+  <footer class="landing-footer">
+    <div>Contact: <a href="mailto:hello@spicespark.example">hello@spicespark.example</a> • <strong>SpiceSpark</strong></div>
+  </footer>
+
+  <script>
+    // If user is already logged in (cookie present) redirect to /user/index.html
+    (function(){
+      const m = document.cookie.match('(^|;)\\s*spice_user\\s*=\\s*([^;]+)');
+      if (m && m[2]) {
+        try{ window.location.href = '/user/index.html'; }catch(e){}
+      }
+    })();
+  </script>
+</body>
+</html>
