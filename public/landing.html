@@ -8,19 +8,37 @@
   <meta name="theme-color" content="#f97316">
   <link rel="stylesheet" href="/user/style.css">
   <style>
-    /* Hero-specific styles for landing page */
-    body { display:flex; align-items:stretch; justify-content:center; min-height:100vh; background: linear-gradient(180deg,#f1f5f9 0%, #ffffff 60%); }
-    .hero { width:100%; max-width:1200px; margin:40px; background:transparent; display:flex; gap:30px; align-items:center; }
-    .hero-card { flex:1; background:transparent; }
-    .hero-visual { flex:1; display:flex; align-items:center; justify-content:center; }
-    .brand { font-size:48px; font-weight:900; color:#0f172a; margin:0 0 10px 0; letter-spacing:-1px; }
+    /* Hero-specific styles for landing page with animated decorative food icons */
+    :root{--accent:#f97316; --dark:#0f172a}
+    body { display:flex; align-items:stretch; justify-content:center; min-height:100vh; background: linear-gradient(180deg,#f1f5f9 0%, #ffffff 60%); overflow-x:hidden; }
+    .hero { width:100%; max-width:1200px; margin:40px; background:transparent; display:flex; gap:30px; align-items:center; position:relative; }
+    .hero-card { flex:1; background:transparent; z-index:5; }
+    .hero-visual { flex:1; display:flex; align-items:center; justify-content:center; position:relative; }
+    .brand { font-size:48px; font-weight:900; color:var(--dark); margin:0 0 10px 0; letter-spacing:-1px; }
     .tag { color:#64748b; margin-bottom:20px; }
     .cta { display:flex; gap:12px; margin-top:20px; }
     .cta .btn-primary { padding:12px 20px; border-radius:12px; font-weight:800; }
-    .decor { width:300px; height:300px; border-radius:20px; background: radial-gradient(circle at 20% 20%, #fff7ed, #f97316 40%, #0f172a 100%); box-shadow: 0 30px 60px rgba(2,6,23,0.08); }
-    footer.landing-footer { width:100%; text-align:center; padding:24px 0; color:#64748b; position:fixed; bottom:0; left:0; background:transparent; }
-    .logo-pill { display:inline-block; padding:8px 12px; background:#0f172a; color:#fff; border-radius:8px; font-weight:800; }
-    @media (max-width:900px){ .hero{flex-direction:column; margin:20px;} .hero-visual{order:-1} }
+    footer.landing-footer { width:100%; text-align:center; padding:14px 0; color:#64748b; position:fixed; bottom:0; left:0; background:linear-gradient(180deg, transparent, rgba(255,255,255,0.9)); z-index:6 }
+    .logo-pill { display:inline-block; padding:8px 12px; background:var(--dark); color:#fff; border-radius:8px; font-weight:800; }
+
+    /* floating food icons built from available icons */
+    .floating-icon{ position:absolute; width:110px; height:110px; background-size:cover; border-radius:16px; box-shadow:0 18px 40px rgba(2,6,23,0.12); opacity:0.95 }
+    .fi-1{ right:10%; top:6%; background-image:url('/icons/icon-512.png'); transform:scale(1.05); animation:floaty 6s ease-in-out infinite; }
+    .fi-2{ right:22%; bottom:6%; background-image:url('/icons/icon-192.png'); width:88px; height:88px; animation:floaty 7s ease-in-out 0.4s infinite; }
+    .fi-3{ left:6%; top:18%; background-image:url('/icons/icon-512.png'); width:120px; height:120px; animation:floaty 8s ease-in-out 0.8s infinite; }
+    .fi-4{ left:12%; bottom:12%; background-image:url('/icons/icon-192.png'); width:76px; height:76px; animation:floaty 5.5s ease-in-out 0.2s infinite; }
+
+    @keyframes floaty{ 0%{ transform:translateY(0) }50%{ transform:translateY(-18px) }100%{ transform:translateY(0) } }
+
+    /* animated delicious background using CSS gradient layers */
+    .hero::before{ content:''; position:absolute; inset:0; z-index:1; background-image: radial-gradient(circle at 10% 20%, rgba(249,115,22,0.06), transparent 10%), radial-gradient(circle at 80% 70%, rgba(59,130,246,0.04), transparent 10%); pointer-events:none }
+
+    /* PWA and WhatsApp buttons */
+    .landing-actions{ display:flex; gap:12px; margin-top:18px }
+    .pwa-install-btn{ background:var(--accent); color:#fff; border:none; padding:10px 14px; border-radius:999px; font-weight:800; cursor:pointer }
+    .whatsapp-btn{ background:#25D366; color:#fff; border:none; padding:10px 14px; border-radius:999px; font-weight:800; cursor:pointer }
+
+    @media (max-width:900px){ .hero{flex-direction:column; margin:20px;} .hero-visual{order:-1} .floating-icon{display:none} }
   </style>
 </head>
 <body>
@@ -35,11 +53,20 @@
         <a href="/login.html" class="btn-primary" style="background:#3b82f6">Login</a>
       </div>
 
+      <div class="landing-actions">
+        <button id="pwa-install-btn" class="pwa-install-btn" aria-hidden="true">Install</button>
+        <a id="wa-link" class="whatsapp-btn" href="https://wa.me/1234567890" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+
       <p style="margin-top:18px; color:#94a3b8; font-size:0.95rem;">No sign-up required to browse some features — registration keeps your recipes safe.</p>
     </div>
 
-    <div class="hero-visual">
-      <div class="decor" aria-hidden="true"></div>
+    <div class="hero-visual" aria-hidden="true">
+      <!-- decorative floating food icons using available icons -->
+      <div class="floating-icon fi-1"></div>
+      <div class="floating-icon fi-2"></div>
+      <div class="floating-icon fi-3"></div>
+      <div class="floating-icon fi-4"></div>
     </div>
   </main>
 
@@ -55,6 +82,31 @@
         try{ window.location.href = '/user/index.html'; }catch(e){}
       }
     })();
+
+    // PWA install prompt handling for landing page
+    let deferredInstallPrompt = null;
+    const installBtn = document.getElementById('pwa-install-btn');
+    if (installBtn) installBtn.style.display = 'none';
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      if (installBtn) {
+        installBtn.removeAttribute('aria-hidden');
+        installBtn.style.display = '';
+        installBtn.addEventListener('click', async () => {
+          if (!deferredInstallPrompt) return;
+          deferredInstallPrompt.prompt();
+          const choice = await deferredInstallPrompt.userChoice;
+          deferredInstallPrompt = null;
+          installBtn.style.display = 'none';
+        });
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      if (installBtn) installBtn.style.display = 'none';
+    });
   </script>
 </body>
 </html>
