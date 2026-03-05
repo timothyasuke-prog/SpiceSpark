@@ -13,9 +13,15 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
-  );
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    try {
+      await cache.addAll(ASSETS);
+    } catch (err) {
+      // If some assets fail to cache (404/external), swallow the error so install doesn't fail.
+      console.warn('Some assets failed to cache:', err);
+    }
+  })());
   self.skipWaiting();
 });
 

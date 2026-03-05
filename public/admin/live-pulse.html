@@ -18,6 +18,14 @@
     </style>
 </head>
 <body>
+    <!-- compact left nav button/menu (matches user panel style) -->
+    <button id="nav-btn" class="left-nav-btn" aria-label="Open navigation" onclick="toggleNavMenu()"><i class="fas fa-bars"></i></button>
+    <div id="nav-menu" class="left-nav-menu" aria-hidden="true" style="display:none;">
+        <div style="margin-bottom:8px; font-weight:800; color: #f97316;">Admin</div>
+        <div class="nav-item" onclick="location.href='/admin-dashboard'">Dashboard</div>
+        <div class="nav-item" onclick="location.href='/admin-live-pulse'">Live Pulse</div>
+    </div>
+
     <button class="sidebar-toggle-mobile" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
     <aside class="sidebar">
@@ -49,6 +57,7 @@
                 const res = await fetch('/api/admin/live-feed');
                 const feed = await res.json();
                 const div = document.getElementById('liveFeed');
+                if (!div) return;
                 div.innerHTML = feed.map(f => `
                     <div class="feed-item">
                         <strong>${f.email.split('@')[0]}</strong> searched for:<br>
@@ -67,6 +76,28 @@
         function handleResize() { if (window.innerWidth < 768) document.querySelector('.sidebar').classList.add('collapsed'); else document.querySelector('.sidebar').classList.remove('collapsed'); }
         window.addEventListener('resize', handleResize); handleResize();
         if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js').catch(console.error);
+
+        // small nav menu toggle for admin pages
+        function toggleNavMenu() {
+            const menu = document.getElementById('nav-menu');
+            if (!menu) return;
+            const isHidden = menu.getAttribute('aria-hidden') === 'true';
+            menu.setAttribute('aria-hidden', String(!isHidden));
+            menu.style.display = isHidden ? 'block' : 'none';
+        }
+
+        // Close nav menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('nav-menu');
+            const btn = document.getElementById('nav-btn');
+            if (!menu || !btn) return;
+            const isVisible = menu.style.display === 'block';
+            if (!isVisible) return;
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.style.display = 'none';
+                menu.setAttribute('aria-hidden', 'true');
+            }
+        });
     </script>
 </body>
 </html>
