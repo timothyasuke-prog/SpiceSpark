@@ -10,7 +10,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* Make admin pages fluid and responsive. Sidebar can shrink while main content takes remaining space. */
-        body { display: grid; grid-template-columns: minmax(80px, 280px) 1fr; background: #f1f5f9; min-height: 100vh; gap: 0; }
+        body { display: grid; grid-template-columns: minmax(80px, 280px) 1fr; background-image: url('/icons/admin-panel.png'); background-size: cover; background-position: center; min-height: 100vh; gap: 0; }
+        /* subtle dark overlay for readability */
+        body::before{ content:''; position:fixed; inset:0; background: rgba(3,7,18,0.35); pointer-events:none; z-index:0 }
 
         /* Sidebar Feed Style */
         .sidebar { background: #0f172a; color: white; padding: 20px; border-right: 1px solid #334155; height: 100vh; position: sticky; top: 0; overflow-y: auto; width: auto; }
