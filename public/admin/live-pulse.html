@@ -72,7 +72,7 @@
                 if (!div) return;
                 div.innerHTML = feed.map(f => `
                     <div class="feed-item">
-                        <strong>${f.email.split('@')[0]}</strong> searched for:<br>
+                        <strong>${f.email}</strong> generated:<br>
                         <span style="color: #f97316;">${f.ingredients}</span><br>
                         <small>${new Date(f.date).toLocaleTimeString()}</small>
                     </div>
