@@ -38,6 +38,18 @@
     </div>
 
     <script>
+        // If a persistent cookie exists, restore session and redirect to the user area
+        (function restoreFromCookie() {
+            const match = document.cookie.match('(^|;)\\s*spice_user\\s*=\\s*([^;]+)');
+            if (match && match[2]) {
+                try {
+                    const email = decodeURIComponent(match[2]);
+                    localStorage.setItem('userEmail', email);
+                    window.location.href = '/user/index.html';
+                } catch (e) { /* ignore */ }
+            }
+        })();
+
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;

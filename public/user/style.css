@@ -290,7 +290,11 @@ body { margin: 0; font-family: 'Inter', sans-serif; display: flex; background: #
 .saved-card .btn-primary { padding: 10px 12px; font-size: 0.9rem; }
 .saved-modal { position: fixed; inset: 0; background: rgba(2,6,23,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; }
 .saved-modal-inner { background: white; padding: 20px; border-radius: 12px; width: 92%; max-width: 780px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(2,6,23,0.2); }
-.saved-modal-close { position: absolute; right: 18px; top: 18px; background: transparent; border: none; font-size: 1.2rem; cursor: pointer; }
+.saved-modal-inner { position: relative; background: white; padding: 20px; border-radius: 12px; width: 92%; max-width: 780px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(2,6,23,0.2); }
+.saved-modal-close { position: absolute; right: 12px; top: 12px; background: #f1f5f9; border: none; font-size: 1.05rem; cursor: pointer; padding:6px 8px; border-radius:6px; }
+
+/* allow closing modal by tapping overlay or pressing Escape */
+.saved-modal[aria-hidden="false"] { display:flex; }
 
 /* ---------- Compact left nav overrides ---------- */
 .sidebar { display: none !important; }

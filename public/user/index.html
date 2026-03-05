@@ -141,9 +141,25 @@
                 const data = await res.json();
                 
                 const lines = data.recipes.split('\n');
-                const title = lines.find(l => l.startsWith('TITLE:'))?.replace('TITLE:', '').trim() || "YOUR RECIPE";
+                let title = lines.find(l => l.startsWith('TITLE:'))?.replace('TITLE:', '').trim() || "";
                 const stats = lines.find(l => l.startsWith('STATS:'))?.replace('STATS:', '').trim() || "";
                 const body = data.recipes.split('\n').slice(2).join('\n');
+
+                // If AI didn't provide a TITLE, derive a meaningful title from headings or ingredients
+                if (!title || title.toUpperCase().includes('YOUR RECIPE')) {
+                    // try to find a heading in the AI output
+                    const headingMatch = data.recipes.match(/^(?:#|##|###)\s*(.+)$/m);
+                    if (headingMatch && headingMatch[1]) {
+                        title = headingMatch[1].trim();
+                    } else {
+                        // fallback: build title from the first ingredient
+                        const ingrVal = (document.getElementById('ingredients').value || '').trim();
+                        const first = ingrVal.split(',')[0] || '';
+                        const base = first.replace(/[^a-zA-Z0-9 ]/g, '').trim().split(' ').slice(0,4).map(w => w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+                        title = base || 'My Recipe';
+                    }
+                    if (!/recipe/i.test(title)) title = title + ' Recipe';
+                }
 
                 const formatted = body
                     .replace(/### (.*)/g, '<h3 class="section-header">$1</h3>')
@@ -242,6 +258,18 @@
         function closeSavedModal() {
             document.getElementById('savedModal').style.display = 'none';
         }
+
+        // close modal when clicking overlay or pressing Escape
+        document.addEventListener('click', function (e) {
+            const modal = document.getElementById('savedModal');
+            if (!modal) return;
+            if (modal.style.display !== 'block') return;
+            if (e.target === modal) closeSavedModal();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeSavedModal();
+        });
 
         function downloadSaved(index) {
             const list = window._savedRecipes || [];
