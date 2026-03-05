@@ -285,6 +285,13 @@ body { margin: 0; font-family: 'Inter', sans-serif; display: flex; background: #
 @keyframes fadeInUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
 .animated-in { animation: fadeInUp 0.5s ease forwards; }
 
+/* Saved recipe card actions and modal */
+.saved-card { display:flex; flex-direction:column; justify-content:space-between; }
+.saved-card .btn-primary { padding: 10px 12px; font-size: 0.9rem; }
+.saved-modal { position: fixed; inset: 0; background: rgba(2,6,23,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+.saved-modal-inner { background: white; padding: 20px; border-radius: 12px; width: 92%; max-width: 780px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(2,6,23,0.2); }
+.saved-modal-close { position: absolute; right: 18px; top: 18px; background: transparent; border: none; font-size: 1.2rem; cursor: pointer; }
+
 /* ---------- Compact left nav overrides ---------- */
 .sidebar { display: none !important; }
 .sidebar-toggle-mobile { display: none !important; }
@@ -324,4 +331,26 @@ body { margin: 0; font-family: 'Inter', sans-serif; display: flex; background: #
 
 @media (max-width: 768px) {
     .left-nav-menu { left: 12px; top: 56px; min-width: 160px; }
+}
+
+/* PWA install button (appears on mobile) */
+.pwa-install-btn {
+    position: fixed;
+    right: 16px;
+    bottom: 22px;
+    z-index: 1200;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 12px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(15,23,42,0.15);
+    display: none; /* shown when beforeinstallprompt fires */
+}
+.pwa-install-btn i { margin-right:8px; }
+
+@media (min-width: 769px) {
+    /* on larger screens, keep existing browser install UI; still allow button if desired */
+    .pwa-install-btn { display: none !important; }
 }

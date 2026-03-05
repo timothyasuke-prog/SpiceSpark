@@ -11,6 +11,8 @@
     <link rel="manifest" href="../manifest.json">
 </head>
 <body>
+    <!-- PWA install button (mobile) -->
+    <button id="pwa-install-btn" class="pwa-install-btn" aria-hidden="true"><i class="fas fa-download"></i> Install</button>
     <!-- Replaced full sidebar with a single fixed navigation button + compact menu -->
     <button id="nav-btn" class="left-nav-btn" aria-label="Open navigation" onclick="toggleNavMenu()"><i class="fas fa-bars"></i></button>
     <div id="nav-menu" class="left-nav-menu" aria-hidden="true" style="display:none;">
@@ -43,13 +45,35 @@
         <div id="box" class="tab-content">
             <h1>My Recipe Box</h1>
             <div id="savedContainer" class="grid-2"></div>
+            <!-- Saved recipe modal -->
+            <div id="savedModal" class="saved-modal" style="display:none;">
+                <div class="saved-modal-inner">
+                    <button class="saved-modal-close" onclick="closeSavedModal()">✕</button>
+                    <h2 id="modalTitle">Recipe</h2>
+                    <div id="modalContent" class="recipe-content" style="margin-top:12px; white-space:pre-wrap;"></div>
+                    <div style="margin-top:18px; display:flex; gap:10px;">
+                        <button id="modalDownload" class="btn-primary"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                        <button id="modalDelete" class="btn-primary" style="background:#ef4444;"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
     <script>
         // --- 1. SECURITY LOCK ---
-        const userEmail = localStorage.getItem('userEmail');
-        
+        function getCookie(name) {
+            const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+            return v ? decodeURIComponent(v.pop()) : null;
+        }
+
+        let userEmail = localStorage.getItem('userEmail');
+        if ((!userEmail || userEmail === "null") && getCookie('spice_user')) {
+            // restore from cookie if present
+            userEmail = getCookie('spice_user');
+            localStorage.setItem('userEmail', userEmail);
+        }
+
         if (!userEmail || userEmail === "null") {
             alert("Security: Please login to access the Generation Room.");
             window.location.href = "../login.html";
@@ -179,18 +203,84 @@
         }
 
         async function loadSaved() {
-            const res = await fetch(`/api/user/my-recipes/${userEmail}`);
-            const recipes = await res.json();
-            document.getElementById('savedContainer').innerHTML = recipes.map(r => `
-                <div class="recipe-card">
-                    <h3 style="margin-top:0;">${r.title}</h3>
-                    <p style="font-size:0.8rem; color:#64748b;">${r.content.substring(0, 80)}...</p>
-                </div>
-            `).join('');
+            try {
+                const res = await fetch(`/api/user/my-recipes/${userEmail}`);
+                const recipes = await res.json();
+                // store locally for modal access
+                window._savedRecipes = recipes;
+                const container = document.getElementById('savedContainer');
+                if (!container) return;
+                container.innerHTML = recipes.map((r, i) => `
+                    <div class="recipe-card saved-card" data-index="${i}">
+                        <h3 style="margin-top:0;">${r.title}</h3>
+                        <p style="font-size:0.9rem; color:#64748b;">${r.content.substring(0, 80)}...</p>
+                        <div style="margin-top:12px; display:flex; gap:8px;">
+                            <button class="btn-primary" onclick="openSaved(${i})"><i class="fas fa-eye"></i> Open</button>
+                            <button class="btn-primary" style="background:#3b82f6;" onclick="downloadSaved(${i})"><i class="fas fa-file-pdf"></i> Download</button>
+                            <button class="btn-primary" style="background:#ef4444;" onclick="deleteSaved(${i})"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Failed to load saved recipes', err);
+            }
+        }
+
+        function openSaved(index) {
+            const list = window._savedRecipes || [];
+            const r = list[index];
+            if (!r) return alert('Recipe not found');
+            document.getElementById('modalTitle').innerText = r.title;
+            document.getElementById('modalContent').innerText = r.content;
+            document.getElementById('savedModal').style.display = 'block';
+            const dlBtn = document.getElementById('modalDownload');
+            const delBtn = document.getElementById('modalDelete');
+            dlBtn.onclick = () => downloadSaved(index);
+            delBtn.onclick = () => deleteSaved(index);
+        }
+
+        function closeSavedModal() {
+            document.getElementById('savedModal').style.display = 'none';
+        }
+
+        function downloadSaved(index) {
+            const list = window._savedRecipes || [];
+            const r = list[index];
+            if (!r) return alert('Recipe not found');
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(18);
+            doc.text(r.title, 14, 20);
+            doc.setFontSize(11);
+            const split = doc.splitTextToSize(r.content, 180);
+            doc.text(split, 14, 30);
+            doc.save(`${r.title}.pdf`);
+        }
+
+        async function deleteSaved(index) {
+            const list = window._savedRecipes || [];
+            const r = list[index];
+            if (!r) return alert('Recipe not found');
+            if (!confirm('Delete this saved recipe?')) return;
+            try {
+                await fetch('/api/user/delete-recipe', {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ email: userEmail, title: r.title })
+                });
+                // refresh list
+                await loadSaved();
+                closeSavedModal();
+            } catch (err) {
+                console.error('Delete failed', err);
+                alert('Failed to delete recipe');
+            }
         }
 
         function logout() {
             localStorage.clear();
+            // clear the persistent cookie as well
+            document.cookie = 'spice_user=; Max-Age=0; path=/;';
             window.location.href = "../login.html";
         }
 
@@ -214,6 +304,44 @@
                 menu.style.display = 'none';
                 menu.setAttribute('aria-hidden', 'true');
             }
+        });
+    </script>
+    <script>
+        // PWA install prompt handling (mobile-friendly)
+        let deferredInstallPrompt = null;
+        const pwaBtn = document.getElementById('pwa-install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            if (pwaBtn) {
+                pwaBtn.style.display = 'block';
+                pwaBtn.setAttribute('aria-hidden', 'false');
+            }
+        });
+
+        if (pwaBtn) {
+            pwaBtn.addEventListener('click', async () => {
+                if (!deferredInstallPrompt) return;
+                deferredInstallPrompt.prompt();
+                const choice = await deferredInstallPrompt.userChoice;
+                if (choice.outcome === 'accepted') {
+                    console.log('PWA: user accepted install');
+                } else {
+                    console.log('PWA: user dismissed install');
+                }
+                deferredInstallPrompt = null;
+                pwaBtn.style.display = 'none';
+                pwaBtn.setAttribute('aria-hidden', 'true');
+            });
+        }
+
+        window.addEventListener('appinstalled', () => {
+            if (pwaBtn) {
+                pwaBtn.style.display = 'none';
+                pwaBtn.setAttribute('aria-hidden', 'true');
+            }
+            console.log('PWA installed');
         });
     </script>
     <script>

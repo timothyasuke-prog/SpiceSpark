@@ -9,23 +9,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { display: grid; grid-template-columns: 280px 1fr; background: #f1f5f9; min-height: 100vh; }
-        
+        /* Make admin pages fluid and responsive. Sidebar can shrink while main content takes remaining space. */
+        body { display: grid; grid-template-columns: minmax(80px, 280px) 1fr; background: #f1f5f9; min-height: 100vh; gap: 0; }
+
         /* Sidebar Feed Style */
-        .sidebar { background: #0f172a; color: white; padding: 20px; border-right: 1px solid #334155; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
-        .feed-item { background: #1e293b; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 0.8rem; border-left: 3px solid #f97316; }
+        .sidebar { background: #0f172a; color: white; padding: 20px; border-right: 1px solid #334155; height: 100vh; position: sticky; top: 0; overflow-y: auto; width: auto; }
+        .feed-item { background: #1e293b; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; border-left: 3px solid #f97316; word-break: break-word; white-space: normal; }
         
         /* Main Layout */
-        .main-content { padding: 30px; }
+        .main-content { padding: 30px; width: 100%; max-width: none; box-sizing: border-box; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); width: 100%; box-sizing: border-box; }
         
         /* Wall of Shame Styles */
         .error-row { color: #ef4444; background: #fef2f2; font-family: monospace; font-size: 0.75rem; }
         .status-pill { padding: 4px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; }
         
         /* Mobile responsive */
+        @media (max-width: 1024px) {
+            /* allow more fluidity on medium screens */
+            body { grid-template-columns: minmax(60px, 220px) 1fr; }
+        }
         @media (max-width: 768px) {
+            /* mobile: stack vertically and allow the main content to use full width */
             body { display: block; }
             .sidebar { position: fixed; left: -280px; top: 0; height: 100%; width: 280px; padding: 20px; z-index: 999; transition: left 0.3s; }
             .sidebar:not(.collapsed) { left: 0; }
@@ -36,6 +42,8 @@
     </style>
 </head>
 <body>
+    <!-- PWA install button (mobile) -->
+    <button id="pwa-install-btn" class="pwa-install-btn" aria-hidden="true"><i class="fas fa-download"></i> Install</button>
     <!-- compact left nav button/menu (matches user panel style) -->
     <button id="nav-btn" class="left-nav-btn" aria-label="Open navigation" onclick="toggleNavMenu()"><i class="fas fa-bars"></i></button>
     <div id="nav-menu" class="left-nav-menu" aria-hidden="true" style="display:none;">
@@ -223,6 +231,40 @@
                 menu.style.display = 'none';
                 menu.setAttribute('aria-hidden', 'true');
             }
+        });
+
+        // PWA install prompt handling (mobile-friendly)
+        let deferredInstallPrompt = null;
+        const pwaBtn = document.getElementById('pwa-install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            if (pwaBtn) {
+                pwaBtn.style.display = 'block';
+                pwaBtn.setAttribute('aria-hidden', 'false');
+            }
+        });
+
+        if (pwaBtn) {
+            pwaBtn.addEventListener('click', async () => {
+                if (!deferredInstallPrompt) return;
+                deferredInstallPrompt.prompt();
+                const choice = await deferredInstallPrompt.userChoice;
+                if (choice.outcome === 'accepted') console.log('PWA: user accepted install');
+                else console.log('PWA: user dismissed install');
+                deferredInstallPrompt = null;
+                pwaBtn.style.display = 'none';
+                pwaBtn.setAttribute('aria-hidden', 'true');
+            });
+        }
+
+        window.addEventListener('appinstalled', () => {
+            if (pwaBtn) {
+                pwaBtn.style.display = 'none';
+                pwaBtn.setAttribute('aria-hidden', 'true');
+            }
+            console.log('PWA installed');
         });
     </script>
 </body>

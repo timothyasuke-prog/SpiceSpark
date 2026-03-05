@@ -16,6 +16,9 @@
 </head>
 <body>
 
+    <!-- PWA install button (mobile) -->
+    <button id="pwa-install-btn" class="pwa-install-btn" aria-hidden="true"><i class="fas fa-download"></i> Install</button>
+
     <div class="auth-card">
         <h2 style="text-align: center; color: #f97316;"><i class="fas fa-hat-chef"></i> SpiceSpark</h2>
         <p style="text-align: center; color: #64748b;">Login to enter the kitchen</p>
@@ -52,6 +55,8 @@
                 if (res.ok) {
                     // --- THE STAMP ---
                     localStorage.setItem('userEmail', data.email);
+                    // Also set a long-lived cookie as a fallback for persistent login across sessions
+                    document.cookie = `spice_user=${encodeURIComponent(data.email)}; path=/; max-age=${60*60*24*365}`;
                     window.location.href = data.redirect; // Goes to user/index.html
                 } else {
                     alert(data.error || "Login Failed");
@@ -65,6 +70,37 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/service-worker.js').catch(console.error);
         }
+
+        // PWA install prompt handling (mobile)
+        let deferredInstallPrompt = null;
+        const pwaBtn = document.getElementById('pwa-install-btn');
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            if (pwaBtn) {
+                pwaBtn.style.display = 'block';
+                pwaBtn.setAttribute('aria-hidden', 'false');
+            }
+        });
+        if (pwaBtn) {
+            pwaBtn.addEventListener('click', async () => {
+                if (!deferredInstallPrompt) return;
+                deferredInstallPrompt.prompt();
+                const choice = await deferredInstallPrompt.userChoice;
+                if (choice.outcome === 'accepted') console.log('PWA: user accepted install');
+                else console.log('PWA: user dismissed install');
+                deferredInstallPrompt = null;
+                pwaBtn.style.display = 'none';
+                pwaBtn.setAttribute('aria-hidden', 'true');
+            });
+        }
+        window.addEventListener('appinstalled', () => {
+            if (pwaBtn) {
+                pwaBtn.style.display = 'none';
+                pwaBtn.setAttribute('aria-hidden', 'true');
+            }
+            console.log('PWA installed');
+        });
     </script>
 </body>
 </html>

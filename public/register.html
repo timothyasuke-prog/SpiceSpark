@@ -11,6 +11,9 @@
 </head>
 <body style="display: flex; align-items: center; justify-content: center; background: #f1f5f9;">
 
+    <!-- PWA install button (mobile) -->
+    <button id="pwa-install-btn" class="pwa-install-btn" aria-hidden="true"><i class="fas fa-download"></i> Install</button>
+
     <div class="recipe-card" style="width: 100%; max-width: 400px; border-left: 6px solid #f97316;">
         <div style="text-align: center; margin-bottom: 2rem;">
             <h2 style="color: #0f172a;"><i class="fas fa-utensils"></i> JoinSpiceSpark</h2>
@@ -96,6 +99,36 @@
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/service-worker.js').catch(console.error);
     }
+        // PWA install prompt handling (mobile)
+        let deferredInstallPrompt = null;
+        const pwaBtn = document.getElementById('pwa-install-btn');
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            if (pwaBtn) {
+                pwaBtn.style.display = 'block';
+                pwaBtn.setAttribute('aria-hidden', 'false');
+            }
+        });
+        if (pwaBtn) {
+            pwaBtn.addEventListener('click', async () => {
+                if (!deferredInstallPrompt) return;
+                deferredInstallPrompt.prompt();
+                const choice = await deferredInstallPrompt.userChoice;
+                if (choice.outcome === 'accepted') console.log('PWA: user accepted install');
+                else console.log('PWA: user dismissed install');
+                deferredInstallPrompt = null;
+                pwaBtn.style.display = 'none';
+                pwaBtn.setAttribute('aria-hidden', 'true');
+            });
+        }
+        window.addEventListener('appinstalled', () => {
+            if (pwaBtn) {
+                pwaBtn.style.display = 'none';
+                pwaBtn.setAttribute('aria-hidden', 'true');
+            }
+            console.log('PWA installed');
+        });
 </script>
 </body>
 </html>

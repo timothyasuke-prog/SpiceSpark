@@ -199,6 +199,18 @@ app.get('/api/user/my-recipes/:email', async (req, res) => {
     } catch (err) { res.status(500).json({ error: "Fetch failed" }); }
 });
 
+// Delete a saved recipe for a user by title
+app.post('/api/user/delete-recipe', async (req, res) => {
+    try {
+        const { email, title } = req.body;
+        await User.findOneAndUpdate({ email }, { $pull: { savedRecipes: { title } } });
+        res.json({ message: 'Deleted' });
+    } catch (err) {
+        console.error('Delete saved recipe error:', err);
+        res.status(500).json({ error: 'Delete failed' });
+    }
+});
+
 // --- 5. ADMIN DASHBOARD ROUTES ---
 app.get('/admin-dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin', 'admin.html'));
