@@ -13,8 +13,11 @@
 
     /* Hero layout */
     .hero{max-width:1300px;margin:36px auto;padding:48px;border-radius:16px;display:flex;gap:30px;position:relative;overflow:hidden;
-      background-image: linear-gradient(135deg,#08307a 0%, #0b5bd7 60%), url('/icons/landing-bg.png');
-      background-size:cover;background-position:center;color:#fff}
+      background-image: url('/icons/landing-bg.png');
+      background-size:cover;background-position:center;color:#fff; background-color:#08307a}
+
+    /* subtle overlay for readability on top of background image */
+    .hero::after{ content:''; position:absolute; inset:0; z-index:2; pointer-events:none; background: linear-gradient(135deg, rgba(3,16,70,0.45), rgba(11,91,215,0.28)); }
 
     .hero-card{flex:1;z-index:5;padding:10px 6px}
     .hero-visual{flex:1;position:relative;display:flex;align-items:center;justify-content:center}
