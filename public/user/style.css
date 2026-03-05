@@ -358,3 +358,10 @@ body { margin: 0; font-family: 'Inter', sans-serif; display: flex; background: #
     /* on larger screens, keep existing browser install UI; still allow button if desired */
     .pwa-install-btn { display: none !important; }
 }
+
+/* user panel background image (applies after login) */
+.main-panel {
+    background-image: url('/icons/user-panel.png');
+    background-size: cover;
+    background-position: center;
+}
