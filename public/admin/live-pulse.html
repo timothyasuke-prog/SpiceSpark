@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SpiceSpark | Live Pulse</title>
+    <link rel="stylesheet" href="../user/style.css">
+    <meta name="theme-color" content="#f97316">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { display: grid; grid-template-columns: 280px 1fr; background: #f1f5f9; min-height: 100vh; }
+        .sidebar { background: #0f172a; color: white; padding: 20px; border-right: 1px solid #334155; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
+        .nav-btn { display:block; padding:12px 10px; margin-bottom:8px; color:#94a3b8; cursor:pointer; border-radius:8px; font-weight:700; }
+        .nav-btn:hover { background:#1e293b; color:#f97316; }
+        .main-content { padding: 30px; }
+        .feed-item { background: #1e293b; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; border-left: 3px solid #f97316; }
+        @media (max-width:768px){ body{display:block;} .sidebar{position:fixed; left:-280px;} }
+    </style>
+</head>
+<body>
+    <button class="sidebar-toggle-mobile" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+
+    <aside class="sidebar">
+        <button id="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <h2 style="font-size: 1rem; color: #f97316;"><i class="fas fa-bolt"></i> NAV</h2>
+        <div style="margin-top:12px;">
+            <div class="nav-btn" onclick="location.href='/admin-dashboard'">Dashboard</div>
+            <div class="nav-btn" onclick="location.href='/admin-live-pulse'" style="color:white; background:#0f172a;">Live Pulse</div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h1>Live Pulse</h1>
+            <div>
+                <button onclick="fetchLiveFeed()" class="btn-primary" style="padding:8px 15px;"><i class="fas fa-sync"></i> Refresh</button>
+            </div>
+        </header>
+
+        <div class="card">
+            <h3 style="font-size:0.9rem; color:#64748b;">Recent Searches</h3>
+            <div id="liveFeed" style="margin-top:12px; max-height:70vh; overflow-y:auto;"></div>
+        </div>
+    </main>
+
+    <script>
+        async function fetchLiveFeed() {
+            try {
+                const res = await fetch('/api/admin/live-feed');
+                const feed = await res.json();
+                const div = document.getElementById('liveFeed');
+                div.innerHTML = feed.map(f => `
+                    <div class="feed-item">
+                        <strong>${f.email.split('@')[0]}</strong> searched for:<br>
+                        <span style="color: #f97316;">${f.ingredients}</span><br>
+                        <small>${new Date(f.date).toLocaleTimeString()}</small>
+                    </div>
+                `).join('');
+            } catch (err) { console.error('Failed to load feed', err); }
+        }
+
+        fetchLiveFeed();
+        setInterval(fetchLiveFeed, 10000);
+
+        // sidebar helpers (same as original)
+        function toggleSidebar() { document.querySelector('.sidebar').classList.toggle('collapsed'); }
+        function handleResize() { if (window.innerWidth < 768) document.querySelector('.sidebar').classList.add('collapsed'); else document.querySelector('.sidebar').classList.remove('collapsed'); }
+        window.addEventListener('resize', handleResize); handleResize();
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js').catch(console.error);
+    </script>
+</body>
+</html>

@@ -204,6 +204,10 @@ app.get('/admin-dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin', 'admin.html'));
 });
 
+app.get('/admin-live-pulse', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin', 'live-pulse.html'));
+});
+
 app.get('/api/admin/all-users', async (req, res) => {
     const users = await User.find().sort({ lastActive: -1 });
     res.json(users);
@@ -221,6 +225,19 @@ app.get('/api/admin/live-feed', async (req, res) => {
 app.get('/api/admin/errors', async (req, res) => {
     const errors = await ErrorLog.find().sort({ timestamp: -1 }).limit(10);
     res.json(errors);
+});
+
+// Delete a user by ID (admin)
+app.delete('/api/admin/delete-user/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const deleted = await User.findByIdAndDelete(id);
+        if (!deleted) return res.status(404).json({ error: 'User not found' });
+        res.json({ message: 'User deleted' });
+    } catch (err) {
+        console.error('Delete user error:', err);
+        res.status(500).json({ error: 'Unable to delete user' });
+    }
 });
 
 // --- START SERVER ---

@@ -11,19 +11,14 @@
     <link rel="manifest" href="../manifest.json">
 </head>
 <body>
-    <button class="sidebar-toggle-mobile" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-
-    <aside class="sidebar">
-        <button id="sidebar-toggle" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
-        </button>
-        <h2 style="color: #f97316; margin-bottom: 5px;"><i class="fas fa-hat-chef"></i>SpiceSpark</h2>
-        <p id="userDisplay" style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 30px; overflow: hidden; text-overflow: ellipsis;"></p>
-        
+    <!-- Replaced full sidebar with a single fixed navigation button + compact menu -->
+    <button id="nav-btn" class="left-nav-btn" aria-label="Open navigation" onclick="toggleNavMenu()"><i class="fas fa-bars"></i></button>
+    <div id="nav-menu" class="left-nav-menu" aria-hidden="true" style="display:none;">
+        <div style="margin-bottom:8px; font-weight:800; color: #f97316;">SpiceSpark</div>
         <div class="nav-item active" id="btn-gen" onclick="showTab('gen')"><i class="fas fa-magic"></i> Generator</div>
         <div class="nav-item" id="btn-box" onclick="showTab('box')"><i class="fas fa-book-heart"></i> My Recipe Box</div>
-        <div class="nav-item" onclick="logout()" style="margin-top: auto; color: #ef4444;"><i class="fas fa-sign-out-alt"></i> Logout</div>
-    </aside>
+        <div class="nav-item" onclick="logout()" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> Logout</div>
+    </div>
 
     <main class="main-panel">
         <div id="gen" class="tab-content tab-active">
@@ -59,7 +54,8 @@
             alert("Security: Please login to access the Generation Room.");
             window.location.href = "../login.html";
         } else {
-            document.getElementById('userDisplay').innerText = "Logged in as: " + userEmail;
+            const ud = document.getElementById('userDisplay');
+            if (ud) ud.innerText = "Logged in as: " + userEmail;
         }
 
         // --- 2. NAVIGATION ---
@@ -75,14 +71,18 @@
 
         // --- SIDEBAR TOGGLE/RESPONSIVE ---
         function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('collapsed');
+            const sb = document.querySelector('.sidebar');
+            if (!sb) return;
+            sb.classList.toggle('collapsed');
         }
 
         function handleResize() {
+            const sb = document.querySelector('.sidebar');
+            if (!sb) return;
             if (window.innerWidth < 768) {
-                document.querySelector('.sidebar').classList.add('collapsed');
+                sb.classList.add('collapsed');
             } else {
-                document.querySelector('.sidebar').classList.remove('collapsed');
+                sb.classList.remove('collapsed');
             }
         }
         window.addEventListener('resize', handleResize);
@@ -193,6 +193,28 @@
             localStorage.clear();
             window.location.href = "../login.html";
         }
+
+        // Compact nav menu toggle (left fixed button)
+        function toggleNavMenu() {
+            const menu = document.getElementById('nav-menu');
+            if (!menu) return;
+            const isHidden = menu.getAttribute('aria-hidden') === 'true';
+            menu.setAttribute('aria-hidden', String(!isHidden));
+            menu.style.display = isHidden ? 'block' : 'none';
+        }
+
+        // Close nav menu when clicking outside of it
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('nav-menu');
+            const btn = document.getElementById('nav-btn');
+            if (!menu || !btn) return;
+            const isVisible = menu.style.display === 'block';
+            if (!isVisible) return;
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.style.display = 'none';
+                menu.setAttribute('aria-hidden', 'true');
+            }
+        });
     </script>
     <script>
         if ('serviceWorker' in navigator) {
