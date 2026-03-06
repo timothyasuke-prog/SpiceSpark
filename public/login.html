@@ -1,151 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - SpiceSpark</title>
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-background:linear-gradient(135deg,#020617,#0f172a);
-}
-
-/* glowing background */
-
-body::before{
-content:"";
-position:absolute;
-width:500px;
-height:500px;
-background:#f97316;
-filter:blur(200px);
-opacity:0.25;
-top:-100px;
-left:-100px;
-}
-
-body::after{
-content:"";
-position:absolute;
-width:500px;
-height:500px;
-background:#38bdf8;
-filter:blur(200px);
-opacity:0.25;
-bottom:-100px;
-right:-100px;
-}
-
-/* card */
-
-.container{
-position:relative;
-background:#020617;
-padding:40px;
-border-radius:14px;
-width:360px;
-box-shadow:0 25px 70px rgba(0,0,0,0.6);
-color:white;
-}
-
-h2{
-text-align:center;
-margin-bottom:25px;
-color:#f97316;
-}
-
-/* inputs */
-
-input{
-width:100%;
-padding:12px;
-margin-bottom:18px;
-border:none;
-border-radius:8px;
-background:#1e293b;
-color:white;
-font-size:15px;
-}
-
-input:focus{
-outline:none;
-background:#334155;
-}
-
-/* button */
-
-button{
-width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
-background:#f97316;
-color:white;
-font-size:16px;
-cursor:pointer;
-transition:0.3s;
-}
-
-button:hover{
-background:#fb923c;
-transform:scale(1.05);
-}
-
-/* links */
-
-.links{
-text-align:center;
-margin-top:15px;
-font-size:14px;
-}
-
-.links a{
-color:#38bdf8;
-text-decoration:none;
-}
-
-.links a:hover{
-text-decoration:underline;
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f97316">
+    <link rel="manifest" href="manifest.json">
+    <title>Chef Llama | Login</title>
+    <link rel="stylesheet" href="user/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { display: flex; align-items: center; justify-content: center; height: 100vh; background: #0f172a; }
+        .auth-card { background: white; padding: 40px; border-radius: 20px; width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #e2e8f0; border-radius: 8px; }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
+    <!-- PWA install button (mobile) -->
+    <button id="pwa-install-btn" class="pwa-install-btn" aria-hidden="true"><i class="fas fa-download"></i> Install</button>
 
-<h2>Login to SpiceSpark</h2>
+    <div class="auth-card">
+        <h2 style="text-align: center; color: #f97316;"><i class="fas fa-hat-chef"></i> SpiceSpark</h2>
+        <p style="text-align: center; color: #64748b;">Login to enter the kitchen</p>
+        
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email Address" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Enter Generation Room</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+            No account? <a href="register.html" style="color: #f97316; font-weight: bold;">Create one</a>
+        </p>
+        <p style="text-align: center; margin-top: 10px; font-size: 0.9rem;">
+            <a href="forgot-password.html" style="color: #f97316; font-weight: bold;">Forgot password?</a>
+        </p>
+    </div>
 
-<form action="/login" method="POST">
+    <script>
+        (function restoreFromCookie() {
+            const match = document.cookie.match('(^|;)\\s*spice_user\\s*=\\s*([^;]+)');
+            if (match && match[2]) {
+                try {
+                    const email = decodeURIComponent(match[2]);
+                    localStorage.setItem('userEmail', email);
+                    window.location.href = '/user/index.html';
+                } catch (e) { }
+            }
+        })();
 
-<input type="email" name="email" id="email" placeholder="Email" required>
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-<input type="password" name="password" id="password" placeholder="Password" required>
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
 
-<button type="submit">Login</button>
+                const data = await res.json();
 
-</form>
+                if (res.ok) {
+                    localStorage.setItem('userEmail', data.email);
+                    document.cookie = `spice_user=${encodeURIComponent(data.email)}; path=/; max-age=${60*60*24*365}`;
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.error || "Login Failed");
+                }
+            } catch (err) {
+                alert("Server is down. Check your terminal.");
+            }
+        };
+    </script>
 
-<div class="links">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js').catch(console.error);
+        }
 
-<p>Don't have an account? <a href="register.html">Register</a></p>
+        let deferredInstallPrompt = null;
+        const pwaBtn = document.getElementById('pwa-install-btn');
 
-</div>
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            if (pwaBtn) {
+                pwaBtn.style.display = 'block';
+                pwaBtn.setAttribute('aria-hidden', 'false');
+            }
+        });
 
-</div>
+        if (pwaBtn) {
+            pwaBtn.addEventListener('click', async () => {
+                if (!deferredInstallPrompt) return;
+                deferredInstallPrompt.prompt();
+                const choice = await deferredInstallPrompt.userChoice;
+                deferredInstallPrompt = null;
+                pwaBtn.style.display = 'none';
+                pwaBtn.setAttribute('aria-hidden', 'true');
+            });
+        }
+
+        window.addEventListener('appinstalled', () => {
+            if (pwaBtn) {
+                pwaBtn.style.display = 'none';
+                pwaBtn.setAttribute('aria-hidden', 'true');
+            }
+        });
+    </script>
 
 </body>
 </html>
