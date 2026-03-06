@@ -1,367 +1,349 @@
-:root {
-    --primary: #f97316; /* Culinary Orange */
-    --primary-dark: #ea580c;
-    --bg: #f8fafc;
-    --text-main: #1e293b;
-    --card-bg: #ffffff;
-    --sidebar-bg: #0f172a;
+/* ===============================
+   SpiceSpark $50M SaaS UI
+   Upgraded Styling
+================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+:root{
+--primary:#f97316;
+--primary-dark:#ea580c;
+--bg:#f8fafc;
+--text-main:#1e293b;
+--card-bg:#ffffff;
+--sidebar-bg:#0f172a;
+--border:#e2e8f0;
 }
 
-body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg);
-    color: var(--text-main);
-    margin: 0;
-    display: flex;
-    min-height: 100vh;
+*{
+box-sizing:border-box;
 }
 
-/* Sidebar Styling */
-.sidebar {
-    width: 260px;
-    background: var(--sidebar-bg);
-    color: white;
-    padding: 2rem 1.5rem;
-    display: flex;
-    flex-direction: column;
+body{
+margin:0;
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--text-main);
+display:flex;
+min-height:100vh;
 }
 
-.sidebar h2 {
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-    color: var(--primary);
-    border-bottom: 1px solid #334155;
-    padding-bottom: 1rem;
+/* ===============================
+SIDEBAR
+================================ */
+
+.sidebar{
+width:280px;
+background:var(--sidebar-bg);
+color:white;
+padding:30px;
+position:sticky;
+top:0;
+height:100vh;
+display:flex;
+flex-direction:column;
+box-shadow:4px 0 20px rgba(0,0,0,0.15);
 }
 
-/* Main Content Area */
-.content {
-    flex: 1;
-    padding: 3rem;
-    max-width: 900px;
-    margin: 0 auto;
+.sidebar h2{
+color:var(--primary);
+font-weight:800;
+font-size:1.5rem;
+margin-bottom:2rem;
+border-bottom:1px solid #334155;
+padding-bottom:15px;
 }
 
-h1 { font-size: 2.25rem; margin-bottom: 1.5rem; color: #0f172a; }
+/* navigation */
 
-/* Form Card */
-.input-section {
-    background: var(--card-bg);
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    margin-bottom: 2rem;
+.nav-item{
+padding:15px;
+cursor:pointer;
+border-radius:12px;
+margin-bottom:10px;
+transition:0.25s;
+font-weight:600;
+display:flex;
+align-items:center;
+gap:10px;
 }
 
-.field { margin-bottom: 1.5rem; }
-.field label { 
-    display: block; 
-    font-weight: 600; 
-    margin-bottom: 0.5rem; 
-    font-size: 0.9rem;
-    color: #64748b;
+.nav-item:hover{
+background:#1e293b;
+color:var(--primary);
+transform:translateX(4px);
 }
 
-input, select {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.2s;
+.nav-item.active{
+background:var(--primary);
+color:white;
 }
 
-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+/* ===============================
+MAIN PANEL
+================================ */
+
+.main-panel{
+flex:1;
+padding:60px;
+max-width:1100px;
+margin:auto;
 }
 
-.btn-primary {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 1rem;
-    width: 100%;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s;
+/* ===============================
+HEADINGS
+================================ */
+
+h1{
+font-size:2.4rem;
+font-weight:800;
+margin-bottom:30px;
+letter-spacing:-0.5px;
 }
 
-.btn-primary:hover { background: var(--primary-dark); }
+/* ===============================
+INPUT SECTION
+================================ */
 
-/* Fancy Recipe Output Card */
-.recipe-card {
-    background: white;
-    padding: 2.5rem;
-    border-radius: 16px;
-    border-left: 6px solid var(--primary);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    line-height: 1.6;
-    animation: slideUp 0.5s ease-out;
+.input-section{
+background:var(--card-bg);
+padding:30px;
+border-radius:20px;
+border:1px solid var(--border);
+box-shadow:0 10px 40px rgba(0,0,0,0.04);
+margin-bottom:30px;
+transition:0.3s;
 }
 
-.recipe-card h2 { 
-    color: var(--primary-dark); 
-    margin-top: 0; 
-    font-size: 1.8rem;
-    border-bottom: 2px solid #fff7ed;
-    padding-bottom: 0.5rem;
+.input-section:hover{
+transform:translateY(-2px);
+box-shadow:0 20px 60px rgba(0,0,0,0.06);
 }
 
-/* Handles the AI's spacing */
-.recipe-content {
-    white-space: pre-wrap;
-    font-size: 1.05rem;
-    color: #334155;
+.field{
+margin-bottom:20px;
 }
 
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-/* Spinner Animation */
-.spinner {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    border: 3px solid rgba(255,255,255,0.3);
-    border-radius: 50%;
-    border-top-color: #fff;
-    animation: spin 1s ease-in-out infinite;
-    margin-right: 10px;
-    vertical-align: middle;
+.field label{
+display:block;
+font-weight:600;
+margin-bottom:8px;
+font-size:0.9rem;
+color:#64748b;
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
+/* ===============================
+INPUTS
+================================ */
+
+input,select{
+width:100%;
+padding:14px;
+border:1px solid var(--border);
+border-radius:10px;
+font-size:0.95rem;
+transition:0.2s;
+background:white;
 }
 
-/* --- Collapsible sidebar --- */
-.sidebar.collapsed {
-    width: 60px !important;
-    padding: 1rem 0.5rem;
-}
-.sidebar.collapsed h2 {
-    font-size: 0 !important;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-.sidebar.collapsed .nav-item {
-    font-size: 0 !important;
-    padding: 12px 0;
-    text-align: center;
-}
-.sidebar.collapsed .nav-item i {
-    font-size: 1.3rem;
-}
-.sidebar.collapsed #sidebar-toggle i {
-    font-size: 1.3rem;
+input:focus{
+outline:none;
+border-color:var(--primary);
+box-shadow:0 0 0 4px rgba(249,115,22,0.1);
 }
 
-/* toggle button in sidebar */
-#sidebar-toggle {
-    cursor: pointer;
-    color: #f97316;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    background: none;
-    border: none;
+/* ===============================
+PRIMARY BUTTON
+================================ */
+
+.btn-primary{
+background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+color:white;
+border:none;
+padding:15px;
+width:100%;
+border-radius:12px;
+font-size:1rem;
+font-weight:700;
+cursor:pointer;
+transition:0.25s;
+box-shadow:0 8px 20px rgba(249,115,22,0.3);
 }
 
-/* mobile toggle floating button (hidden by default) */
-.sidebar-toggle-mobile {
-    display: none;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1000;
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 8px;
-    border-radius: 4px;
-    cursor: pointer;
+.btn-primary:hover{
+transform:translateY(-2px);
+box-shadow:0 15px 35px rgba(249,115,22,0.35);
 }
 
-/* responsive defaults */
-@media (max-width: 768px) {
-    /* sidebar slides offscreen when collapsed on phones */
-    .sidebar {
-        position: fixed;
-        left: -280px;
-        top: 0;
-        height: 100%;
-        transition: left 0.3s;
-        z-index: 999;
-        width: 280px !important;
-        padding: 30px 20px;
-    }
-    .sidebar:not(.collapsed) {
-        left: 0;
-    }
-    .sidebar.collapsed {
-        left: -280px !important;
-    }
-    .main-panel {
-        padding: 20px;
-        width: 100%;
-        flex: 1;
-    }
-    /* show mobile toggle button */
-    .sidebar-toggle-mobile {
-        display: block;
-    }
-}}
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+/* ===============================
+RECIPE CARD
+================================ */
 
-* { box-sizing: border-box; }
-body { margin: 0; font-family: 'Inter', sans-serif; display: flex; background: #f8fafc; color: #1e293b; }
-
-.sidebar { width: 280px; background: #0f172a; height: 100vh; color: white; padding: 30px; position: sticky; top: 0; display: flex; flex-direction: column; }
-.main-panel { flex: 1; padding: 60px; max-width: 1000px; }
-
-.nav-item { padding: 15px; cursor: pointer; border-radius: 10px; margin-bottom: 10px; transition: 0.2s; font-weight: 600; }
-.nav-item:hover { background: #1e293b; color: #f97316; }
-.nav-item.active { background: #f97316; color: white; }
-
-.recipe-card { background: white; padding: 40px; border-radius: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-
-.recipe-title { font-size: 2.8rem; font-weight: 800; color: #0f172a; margin: 0 0 10px 0; letter-spacing: -1px; }
-
-.stats-bar { background: #f1f5f9; padding: 12px 20px; border-radius: 100px; display: inline-block; font-weight: 600; font-size: 0.9rem; color: #475569; margin-bottom: 30px; border: 1px solid #e2e8f0; }
-
-.section-header { background: #0f172a; color: #f97316 !important; padding: 10px 20px; border-radius: 8px; font-size: 1rem; margin-top: 40px !important; text-transform: uppercase; letter-spacing: 2px; display: block; width: fit-content; }
-
-.ingredient-check { width: 18px; height: 18px; margin-right: 12px; cursor: pointer; accent-color: #f97316; }
-
-.recipe-content { font-size: 1.1rem; line-height: 1.8; color: #334155; }
-.recipe-content strong { color: #0f172a; font-weight: 700; border-bottom: 2px solid #fed7aa; }
-
-.btn-primary { background: #0f172a; color: white; border: none; padding: 15px 25px; border-radius: 10px; cursor: pointer; font-weight: 700; transition: 0.2s; }
-.btn-primary:hover { transform: translateY(-2px); background: #f97316; }
-
-.fancy-select { padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; background: white; font-weight: 600; flex: 1; }
-
-.tab-content { display: none; }
-.tab-active { display: block; }
-.animated-in { animation: slideUp 0.6s ease-out forwards; }
-@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-
-* { box-sizing: border-box; }
-body { margin: 0; font-family: 'Inter', sans-serif; display: flex; background: #f8fafc; color: #1e293b; min-height: 100vh; }
-
-.sidebar { width: 280px; background: #0f172a; height: 100vh; color: white; padding: 30px; position: sticky; top: 0; display: flex; flex-direction: column; }
-.main-panel { flex: 1; padding: 40px; overflow-y: auto; }
-
-.nav-item { padding: 15px; cursor: pointer; border-radius: 10px; margin-bottom: 10px; font-weight: 600; color: #94a3b8; }
-.nav-item:hover { color: white; background: #1e293b; }
-.nav-item.active { background: #f97316; color: white; }
-
-.recipe-card { background: white; padding: 30px; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-
-.recipe-title { font-size: 2.5rem; font-weight: 800; color: #0f172a; margin: 0; }
-.stats-bar { background: #f1f5f9; padding: 10px 20px; border-radius: 50px; display: inline-block; font-weight: 600; font-size: 0.85rem; margin: 15px 0; }
-
-.section-header { background: #0f172a; color: #f97316 !important; padding: 8px 15px; border-radius: 6px; font-size: 0.9rem; margin-top: 30px !important; text-transform: uppercase; display: inline-block; }
-
-.ingredient-check { width: 18px; height: 18px; margin-right: 12px; accent-color: #f97316; }
-.recipe-content { line-height: 1.8; margin-top: 20px; }
-.recipe-content strong { color: #0f172a; border-bottom: 2px solid #fed7aa; }
-
-.btn-primary { background: #0f172a; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.2s; }
-.btn-primary:hover { transform: translateY(-2px); filter: brightness(1.2); }
-
-.fancy-select { padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; background: white; flex: 1; }
-.tab-content { display: none; }
-.tab-active { display: block; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-@keyframes fadeInUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
-.animated-in { animation: fadeInUp 0.5s ease forwards; }
-
-/* Saved recipe card actions and modal */
-.saved-card { display:flex; flex-direction:column; justify-content:space-between; }
-.saved-card .btn-primary { padding: 10px 12px; font-size: 0.9rem; }
-.saved-modal { position: fixed; inset: 0; background: rgba(2,6,23,0.5); display: flex; align-items: center; justify-content: center; z-index: 2000; }
-.saved-modal-inner { background: white; padding: 20px; border-radius: 12px; width: 92%; max-width: 780px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(2,6,23,0.2); }
-.saved-modal-inner { position: relative; background: white; padding: 20px; border-radius: 12px; width: 92%; max-width: 780px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(2,6,23,0.2); }
-.saved-modal-close { position: absolute; right: 12px; top: 12px; background: #f1f5f9; border: none; font-size: 1.05rem; cursor: pointer; padding:6px 8px; border-radius:6px; }
-
-/* allow closing modal by tapping overlay or pressing Escape */
-.saved-modal[aria-hidden="false"] { display:flex; }
-
-/* ---------- Compact left nav overrides ---------- */
-.sidebar { display: none !important; }
-.sidebar-toggle-mobile { display: none !important; }
-.left-nav-btn {
-        position: fixed;
-        left: 16px;
-        top: 16px;
-        z-index: 1100;
-        background: var(--primary);
-        color: #fff;
-        border: none;
-        padding: 10px 12px;
-        border-radius: 8px;
-        cursor: pointer;
-        box-shadow: 0 6px 18px rgba(15,23,42,0.18);
-}
-.left-nav-btn i { font-size: 1.1rem; }
-.left-nav-menu {
-        position: fixed;
-        left: 16px;
-        top: 56px;
-        z-index: 1100;
-        background: white;
-        color: #0f172a;
-        border-radius: 10px;
-        padding: 12px;
-        box-shadow: 0 8px 30px rgba(2,6,23,0.12);
-        min-width: 200px;
-        display: none;
-}
-.left-nav-menu .nav-item { margin: 6px 0; padding: 10px; border-radius: 8px; color: #475569; }
-.left-nav-menu .nav-item:hover { background:#f1f5f9; color: #0f172a; }
-.left-nav-menu .nav-item.active { background: var(--primary); color: white; }
-
-/* Give main panel full width since sidebar is hidden */
-.main-panel { padding: 40px; }
-
-@media (max-width: 768px) {
-    .left-nav-menu { left: 12px; top: 56px; min-width: 160px; }
+.recipe-card{
+background:white;
+padding:40px;
+border-radius:24px;
+border:1px solid var(--border);
+box-shadow:0 20px 60px rgba(0,0,0,0.06);
+line-height:1.7;
+animation:fadeUp .6s ease;
 }
 
-/* PWA install button (appears on mobile) */
-.pwa-install-btn {
-    position: fixed;
-    right: 16px;
-    bottom: 22px;
-    z-index: 1200;
-    background: var(--primary);
-    color: #fff;
-    border: none;
-    padding: 12px 14px;
-    border-radius: 999px;
-    font-weight: 700;
-    box-shadow: 0 8px 24px rgba(15,23,42,0.15);
-    display: none; /* shown when beforeinstallprompt fires */
-}
-.pwa-install-btn i { margin-right:8px; }
-
-@media (min-width: 769px) {
-    /* on larger screens, keep existing browser install UI; still allow button if desired */
-    .pwa-install-btn { display: none !important; }
+.recipe-title{
+font-size:2.5rem;
+font-weight:800;
+margin-bottom:10px;
+letter-spacing:-1px;
 }
 
-/* user panel background image (applies after login) */
-.main-panel {
-    background-image: url('/icons/user-panel.png');
-    background-size: cover;
-    background-position: center;
+.stats-bar{
+background:#f1f5f9;
+padding:12px 20px;
+border-radius:100px;
+display:inline-block;
+font-weight:600;
+font-size:0.9rem;
+color:#475569;
+margin-bottom:30px;
+border:1px solid var(--border);
+}
+
+/* ===============================
+SECTION HEADERS
+================================ */
+
+.section-header{
+background:#0f172a;
+color:var(--primary)!important;
+padding:10px 20px;
+border-radius:8px;
+font-size:0.9rem;
+margin-top:40px!important;
+text-transform:uppercase;
+letter-spacing:2px;
+display:inline-block;
+}
+
+/* ===============================
+RECIPE CONTENT
+================================ */
+
+.recipe-content{
+font-size:1.1rem;
+color:#334155;
+white-space:pre-wrap;
+}
+
+/* ===============================
+ANIMATIONS
+================================ */
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* ===============================
+SPINNER
+================================ */
+
+.spinner{
+display:inline-block;
+width:18px;
+height:18px;
+border:3px solid rgba(255,255,255,0.3);
+border-radius:50%;
+border-top-color:white;
+animation:spin 1s linear infinite;
+margin-right:10px;
+}
+
+@keyframes spin{
+to{
+transform:rotate(360deg);
+}
+}
+
+/* ===============================
+SIDEBAR COLLAPSE
+================================ */
+
+.sidebar.collapsed{
+width:70px!important;
+padding:20px 10px;
+}
+
+.sidebar.collapsed h2{
+display:none;
+}
+
+.sidebar.collapsed .nav-item{
+justify-content:center;
+font-size:0;
+}
+
+.sidebar.collapsed .nav-item i{
+font-size:1.3rem;
+}
+
+/* ===============================
+TOGGLE BUTTON
+================================ */
+
+#sidebar-toggle{
+cursor:pointer;
+color:var(--primary);
+font-size:1.5rem;
+margin-bottom:20px;
+background:none;
+border:none;
+}
+
+/* ===============================
+MOBILE
+================================ */
+
+.sidebar-toggle-mobile{
+display:none;
+position:fixed;
+top:15px;
+left:15px;
+z-index:1000;
+background:var(--primary);
+color:white;
+border:none;
+padding:10px;
+border-radius:6px;
+cursor:pointer;
+}
+
+@media(max-width:768px){
+
+.sidebar{
+position:fixed;
+left:-280px;
+top:0;
+height:100%;
+transition:left .3s;
+z-index:999;
+}
+
+.sidebar:not(.collapsed){
+left:0;
+}
+
+.main-panel{
+padding:30px 20px;
+}
+
+.sidebar-toggle-mobile{
+display:block;
+}
+
 }
