@@ -9,85 +9,44 @@
 
 <style>
 
+/* $1M SAAS LOGIN DESIGN */
+
 body{
-margin:0;
+background:linear-gradient(135deg,#020617,#0f172a);
 font-family:Arial, Helvetica, sans-serif;
 height:100vh;
 display:flex;
 align-items:center;
 justify-content:center;
-background:linear-gradient(135deg,#020617,#0f172a);
-overflow:hidden;
 }
 
-/* glowing background */
+/* login container */
 
-body::before{
-content:"";
-position:absolute;
-width:600px;
-height:600px;
-background:#f97316;
-filter:blur(200px);
-opacity:0.25;
-top:-100px;
-left:-100px;
-}
-
-body::after{
-content:"";
-position:absolute;
-width:600px;
-height:600px;
-background:#22c55e;
-filter:blur(200px);
-opacity:0.25;
-bottom:-100px;
-right:-100px;
-}
-
-/* card */
-
-.register-card{
-position:relative;
+.container, .login-container, form{
 background:#020617;
 padding:40px;
-width:380px;
 border-radius:14px;
 box-shadow:0 20px 60px rgba(0,0,0,0.6);
-text-align:center;
+width:350px;
 color:white;
-}
-
-.register-card h2{
-color:#f97316;
-margin-bottom:20px;
+animation:fadeIn 0.8s ease;
 }
 
 /* inputs */
 
-.input-group{
-position:relative;
-margin-bottom:20px;
-}
-
-.input-group input{
+input{
 width:100%;
-padding:12px 40px;
+padding:12px;
+margin-top:10px;
+margin-bottom:20px;
 border:none;
 border-radius:8px;
 background:#1e293b;
 color:white;
+font-size:15px;
 }
 
-.input-group i{
-position:absolute;
-top:12px;
-left:12px;
-color:#94a3b8;
-}
-
-/* button */
+/* buttons */
 
 button{
 width:100%;
@@ -108,23 +67,33 @@ transform:scale(1.05);
 
 /* links */
 
-.links{
-margin-top:15px;
-font-size:14px;
-}
-
-.links a{
+a{
 color:#38bdf8;
 text-decoration:none;
 }
 
-.links a:hover{
+a:hover{
 text-decoration:underline;
 }
 
+/* animation */
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* responsive */
+
 @media(max-width:450px){
 
-.register-card{
+.container, .login-container, form{
 width:90%;
 }
 
