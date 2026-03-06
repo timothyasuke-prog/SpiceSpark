@@ -1,349 +1,273 @@
-/* ===============================
-   SpiceSpark $50M SaaS UI
-   Upgraded Styling
-================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-
-:root{
---primary:#f97316;
---primary-dark:#ea580c;
---bg:#f8fafc;
---text-main:#1e293b;
---card-bg:#ffffff;
---sidebar-bg:#0f172a;
---border:#e2e8f0;
+:root {
+    --primary: #f97316; /* Culinary Orange */
+    --primary-dark: #ea580c;
+    --bg: #f8fafc;
+    --text-main: #1e293b;
+    --card-bg: #ffffff;
+    --sidebar-bg: #0f172a;
 }
 
-*{
-box-sizing:border-box;
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text-main);
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
 }
 
-body{
-margin:0;
-font-family:'Inter',sans-serif;
-background:var(--bg);
-color:var(--text-main);
-display:flex;
-min-height:100vh;
+/* Sidebar Styling */
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    color: white;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
-/* ===============================
-SIDEBAR
-================================ */
-
-.sidebar{
-width:280px;
-background:var(--sidebar-bg);
-color:white;
-padding:30px;
-position:sticky;
-top:0;
-height:100vh;
-display:flex;
-flex-direction:column;
-box-shadow:4px 0 20px rgba(0,0,0,0.15);
+.sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: var(--primary);
+    border-bottom: 1px solid #334155;
+    padding-bottom: 1rem;
 }
 
-.sidebar h2{
-color:var(--primary);
-font-weight:800;
-font-size:1.5rem;
-margin-bottom:2rem;
-border-bottom:1px solid #334155;
-padding-bottom:15px;
+/* Main Content Area */
+.content {
+    flex: 1;
+    padding: 3rem;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
-/* navigation */
+h1 { font-size: 2.25rem; margin-bottom: 1.5rem; color: #0f172a; }
 
-.nav-item{
-padding:15px;
-cursor:pointer;
-border-radius:12px;
-margin-bottom:10px;
-transition:0.25s;
-font-weight:600;
-display:flex;
-align-items:center;
-gap:10px;
+/* Form Card */
+.input-section {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
 }
 
-.nav-item:hover{
-background:#1e293b;
-color:var(--primary);
-transform:translateX(4px);
+.field { margin-bottom: 1.5rem; }
+.field label { 
+    display: block; 
+    font-weight: 600; 
+    margin-bottom: 0.5rem; 
+    font-size: 0.9rem;
+    color: #64748b;
 }
 
-.nav-item.active{
-background:var(--primary);
-color:white;
+input, select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
 }
 
-/* ===============================
-MAIN PANEL
-================================ */
-
-.main-panel{
-flex:1;
-padding:60px;
-max-width:1100px;
-margin:auto;
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
 }
 
-/* ===============================
-HEADINGS
-================================ */
-
-h1{
-font-size:2.4rem;
-font-weight:800;
-margin-bottom:30px;
-letter-spacing:-0.5px;
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 1rem;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
-/* ===============================
-INPUT SECTION
-================================ */
+.btn-primary:hover { background: var(--primary-dark); }
 
-.input-section{
-background:var(--card-bg);
-padding:30px;
-border-radius:20px;
-border:1px solid var(--border);
-box-shadow:0 10px 40px rgba(0,0,0,0.04);
-margin-bottom:30px;
-transition:0.3s;
+/* Fancy Recipe Output Card */
+.recipe-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    border-left: 6px solid var(--primary);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    line-height: 1.6;
+    animation: slideUp 0.5s ease-out;
 }
 
-.input-section:hover{
-transform:translateY(-2px);
-box-shadow:0 20px 60px rgba(0,0,0,0.06);
+.recipe-card h2 { 
+    color: var(--primary-dark); 
+    margin-top: 0; 
+    font-size: 1.8rem;
+    border-bottom: 2px solid #fff7ed;
+    padding-bottom: 0.5rem;
 }
 
-.field{
-margin-bottom:20px;
+/* Handles the AI's spacing */
+.recipe-content {
+    white-space: pre-wrap;
+    font-size: 1.05rem;
+    color: #334155;
 }
 
-.field label{
-display:block;
-font-weight:600;
-margin-bottom:8px;
-font-size:0.9rem;
-color:#64748b;
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* ===============================
-INPUTS
-================================ */
-
-input,select{
-width:100%;
-padding:14px;
-border:1px solid var(--border);
-border-radius:10px;
-font-size:0.95rem;
-transition:0.2s;
-background:white;
+/* Spinner Animation */
+.spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 10px;
+    vertical-align: middle;
 }
 
-input:focus{
-outline:none;
-border-color:var(--primary);
-box-shadow:0 0 0 4px rgba(249,115,22,0.1);
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
-/* ===============================
-PRIMARY BUTTON
-================================ */
-
-.btn-primary{
-background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-color:white;
-border:none;
-padding:15px;
-width:100%;
-border-radius:12px;
-font-size:1rem;
-font-weight:700;
-cursor:pointer;
-transition:0.25s;
-box-shadow:0 8px 20px rgba(249,115,22,0.3);
+/* --- Collapsible sidebar --- */
+.sidebar.collapsed {
+    width: 60px !important;
+    padding: 1rem 0.5rem;
 }
 
-.btn-primary:hover{
-transform:translateY(-2px);
-box-shadow:0 15px 35px rgba(249,115,22,0.35);
+.sidebar.collapsed h2 {
+    font-size: 0 !important;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
-/* ===============================
-RECIPE CARD
-================================ */
-
-.recipe-card{
-background:white;
-padding:40px;
-border-radius:24px;
-border:1px solid var(--border);
-box-shadow:0 20px 60px rgba(0,0,0,0.06);
-line-height:1.7;
-animation:fadeUp .6s ease;
+.sidebar.collapsed .nav-item {
+    font-size: 0 !important;
+    padding: 12px 0;
+    text-align: center;
 }
 
-.recipe-title{
-font-size:2.5rem;
-font-weight:800;
-margin-bottom:10px;
-letter-spacing:-1px;
+.sidebar.collapsed .nav-item i {
+    font-size: 1.3rem;
 }
 
-.stats-bar{
-background:#f1f5f9;
-padding:12px 20px;
-border-radius:100px;
-display:inline-block;
-font-weight:600;
-font-size:0.9rem;
-color:#475569;
-margin-bottom:30px;
-border:1px solid var(--border);
+.sidebar.collapsed #sidebar-toggle i {
+    font-size: 1.3rem;
 }
 
-/* ===============================
-SECTION HEADERS
-================================ */
-
-.section-header{
-background:#0f172a;
-color:var(--primary)!important;
-padding:10px 20px;
-border-radius:8px;
-font-size:0.9rem;
-margin-top:40px!important;
-text-transform:uppercase;
-letter-spacing:2px;
-display:inline-block;
+/* toggle button in sidebar */
+#sidebar-toggle {
+    cursor: pointer;
+    color: #f97316;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    background: none;
+    border: none;
 }
 
-/* ===============================
-RECIPE CONTENT
-================================ */
-
-.recipe-content{
-font-size:1.1rem;
-color:#334155;
-white-space:pre-wrap;
+/* mobile toggle floating button */
+.sidebar-toggle-mobile {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-/* ===============================
-ANIMATIONS
-================================ */
+/* responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        height: 100%;
+        transition: left 0.3s;
+        z-index: 999;
+        width: 280px !important;
+        padding: 30px 20px;
+    }
 
-@keyframes fadeUp{
-from{
-opacity:0;
-transform:translateY(20px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
+    .sidebar:not(.collapsed) { left: 0; }
 
-/* ===============================
-SPINNER
-================================ */
+    .sidebar.collapsed { left: -280px !important; }
 
-.spinner{
-display:inline-block;
-width:18px;
-height:18px;
-border:3px solid rgba(255,255,255,0.3);
-border-radius:50%;
-border-top-color:white;
-animation:spin 1s linear infinite;
-margin-right:10px;
+    .main-panel {
+        padding: 20px;
+        width: 100%;
+        flex: 1;
+    }
+
+    .sidebar-toggle-mobile { display: block; }
 }
 
-@keyframes spin{
-to{
-transform:rotate(360deg);
-}
-}
+/* Compact navigation */
+.sidebar { display: none !important; }
 
-/* ===============================
-SIDEBAR COLLAPSE
-================================ */
-
-.sidebar.collapsed{
-width:70px!important;
-padding:20px 10px;
-}
-
-.sidebar.collapsed h2{
-display:none;
+.left-nav-btn {
+    position: fixed;
+    left: 16px;
+    top: 16px;
+    z-index: 1100;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
-.sidebar.collapsed .nav-item{
-justify-content:center;
-font-size:0;
+.left-nav-menu {
+    position: fixed;
+    left: 16px;
+    top: 56px;
+    z-index: 1100;
+    background: white;
+    color: #0f172a;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.12);
+    min-width: 200px;
+    display: none;
 }
 
-.sidebar.collapsed .nav-item i{
-font-size:1.3rem;
+/* PWA install button */
+.pwa-install-btn {
+    position: fixed;
+    right: 16px;
+    bottom: 22px;
+    z-index: 1200;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 12px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(15,23,42,0.15);
+    display: none;
 }
 
-/* ===============================
-TOGGLE BUTTON
-================================ */
-
-#sidebar-toggle{
-cursor:pointer;
-color:var(--primary);
-font-size:1.5rem;
-margin-bottom:20px;
-background:none;
-border:none;
-}
-
-/* ===============================
-MOBILE
-================================ */
-
-.sidebar-toggle-mobile{
-display:none;
-position:fixed;
-top:15px;
-left:15px;
-z-index:1000;
-background:var(--primary);
-color:white;
-border:none;
-padding:10px;
-border-radius:6px;
-cursor:pointer;
-}
-
-@media(max-width:768px){
-
-.sidebar{
-position:fixed;
-left:-280px;
-top:0;
-height:100%;
-transition:left .3s;
-z-index:999;
-}
-
-.sidebar:not(.collapsed){
-left:0;
-}
-
-.main-panel{
-padding:30px 20px;
-}
-
-.sidebar-toggle-mobile{
-display:block;
-}
-
+/* user panel background image */
+.main-panel {
+    background-image: url('/icons/user-panel.png');
+    background-size: cover;
+    background-position: center;
 }
