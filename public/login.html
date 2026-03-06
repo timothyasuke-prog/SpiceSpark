@@ -1,118 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#f97316">
-    <link rel="manifest" href="manifest.json">
-    <title>Chef Llama | Login</title>
-    <link rel="stylesheet" href="user/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { display: flex; align-items: center; justify-content: center; height: 100vh; background: #0f172a; }
-        .auth-card { background: white; padding: 40px; border-radius: 20px; width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #e2e8f0; border-radius: 8px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - SpiceSpark</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(135deg,#0f172a,#020617);
+overflow:hidden;
+}
+
+/* floating animation background */
+
+body::before{
+content:"";
+position:absolute;
+width:600px;
+height:600px;
+background:#f97316;
+filter:blur(200px);
+opacity:0.3;
+top:-100px;
+left:-100px;
+animation:float 10s infinite alternate;
+}
+
+body::after{
+content:"";
+position:absolute;
+width:600px;
+height:600px;
+background:#38bdf8;
+filter:blur(200px);
+opacity:0.3;
+bottom:-100px;
+right:-100px;
+animation:float 12s infinite alternate;
+}
+
+@keyframes float{
+from{transform:translateY(0)}
+to{transform:translateY(60px)}
+}
+
+/* card */
+
+.login-card{
+position:relative;
+background:#020617;
+padding:40px;
+width:350px;
+border-radius:14px;
+box-shadow:0 20px 60px rgba(0,0,0,0.6);
+text-align:center;
+color:white;
+animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(20px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+.login-card h2{
+margin-bottom:20px;
+color:#f97316;
+}
+
+/* inputs */
+
+.input-group{
+position:relative;
+margin-bottom:20px;
+}
+
+.input-group input{
+width:100%;
+padding:12px 40px;
+border:none;
+border-radius:8px;
+background:#1e293b;
+color:white;
+font-size:15px;
+}
+
+.input-group i{
+position:absolute;
+top:12px;
+left:12px;
+color:#94a3b8;
+}
+
+/* button */
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#f97316;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#fb923c;
+transform:scale(1.05);
+}
+
+/* links */
+
+.links{
+margin-top:15px;
+font-size:14px;
+}
+
+.links a{
+color:#38bdf8;
+text-decoration:none;
+}
+
+.links a:hover{
+text-decoration:underline;
+}
+
+/* mobile */
+
+@media(max-width:450px){
+
+.login-card{
+width:90%;
+}
+
+}
+
+</style>
 </head>
+
 <body>
 
-    <!-- PWA install button (mobile) -->
-    <button id="pwa-install-btn" class="pwa-install-btn" aria-hidden="true"><i class="fas fa-download"></i> Install</button>
+<div class="login-card">
 
-    <div class="auth-card">
-        <h2 style="text-align: center; color: #f97316;"><i class="fas fa-hat-chef"></i> SpiceSpark</h2>
-        <p style="text-align: center; color: #64748b;">Login to enter the kitchen</p>
-        
-        <form id="loginForm">
-            <input type="email" id="email" placeholder="Email Address" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Enter Generation Room</button>
-        </form>
-        
-        <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
-            No account? <a href="register.html" style="color: #f97316; font-weight: bold;">Create one</a>
-        </p>
-        <p style="text-align: center; margin-top: 10px; font-size: 0.9rem;">
-            <a href="forgot-password.html" style="color: #f97316; font-weight: bold;">Forgot password?</a>
-        </p>
-    </div>
+<h2>Welcome Back</h2>
 
-    <script>
-        // If a persistent cookie exists, restore session and redirect to the user area
-        (function restoreFromCookie() {
-            const match = document.cookie.match('(^|;)\\s*spice_user\\s*=\\s*([^;]+)');
-            if (match && match[2]) {
-                try {
-                    const email = decodeURIComponent(match[2]);
-                    localStorage.setItem('userEmail', email);
-                    window.location.href = '/user/index.html';
-                } catch (e) { /* ignore */ }
-            }
-        })();
+<form method="POST" action="/login">
 
-        document.getElementById('loginForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+<div class="input-group">
+<i class="fa fa-envelope"></i>
+<input type="email" name="email" placeholder="Email" required>
+</div>
 
-            try {
-                const res = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
+<div class="input-group">
+<i class="fa fa-lock"></i>
+<input type="password" name="password" placeholder="Password" required>
+</div>
 
-                const data = await res.json();
+<button type="submit">Login</button>
 
-                if (res.ok) {
-                    // --- THE STAMP ---
-                    localStorage.setItem('userEmail', data.email);
-                    // Also set a long-lived cookie as a fallback for persistent login across sessions
-                    document.cookie = `spice_user=${encodeURIComponent(data.email)}; path=/; max-age=${60*60*24*365}`;
-                    window.location.href = data.redirect; // Goes to user/index.html
-                } else {
-                    alert(data.error || "Login Failed");
-                }
-            } catch (err) {
-                alert("Server is down. Check your terminal.");
-            }
-        };
-    </script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js').catch(console.error);
-        }
+</form>
 
-        // PWA install prompt handling (mobile)
-        let deferredInstallPrompt = null;
-        const pwaBtn = document.getElementById('pwa-install-btn');
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredInstallPrompt = e;
-            if (pwaBtn) {
-                pwaBtn.style.display = 'block';
-                pwaBtn.setAttribute('aria-hidden', 'false');
-            }
-        });
-        if (pwaBtn) {
-            pwaBtn.addEventListener('click', async () => {
-                if (!deferredInstallPrompt) return;
-                deferredInstallPrompt.prompt();
-                const choice = await deferredInstallPrompt.userChoice;
-                if (choice.outcome === 'accepted') console.log('PWA: user accepted install');
-                else console.log('PWA: user dismissed install');
-                deferredInstallPrompt = null;
-                pwaBtn.style.display = 'none';
-                pwaBtn.setAttribute('aria-hidden', 'true');
-            });
-        }
-        window.addEventListener('appinstalled', () => {
-            if (pwaBtn) {
-                pwaBtn.style.display = 'none';
-                pwaBtn.setAttribute('aria-hidden', 'true');
-            }
-            console.log('PWA installed');
-        });
-    </script>
+<div class="links">
+
+<p><a href="forgot-password.html">Forgot Password?</a></p>
+
+<p>Don't have an account?  
+<a href="register.html">Register</a></p>
+
+</div>
+
+</div>
+
 </body>
 </html>
