@@ -1,356 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpiceSpark - Recipe Generator</title>
 
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-
-<title>SpiceSpark — Learn. Cook. Enjoy.</title>
-
-<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 
-:root{
---accent:#f97316;
---white:#ffffff;
-}
-
 body{
+font-family:Arial, Helvetica, sans-serif;
 margin:0;
-font-family:Inter,system-ui;
-background:linear-gradient(180deg,#e6eefc,#f1f5f9);
+background:#0f172a;
+color:white;
 overflow-x:hidden;
-animation:fadePage 1s ease;
-}
-
-@keyframes fadePage{
-from{opacity:0}
-to{opacity:1}
 }
 
 /* NAVBAR */
 
-.top-nav{
-position:absolute;
-right:22px;
-top:18px;
+.navbar{
 display:flex;
-gap:18px;
+justify-content:space-between;
 align-items:center;
+padding:15px 50px;
+background:#020617;
+position:sticky;
+top:0;
+z-index:1000;
 }
 
-.top-nav a{
-color:#fff;
+.logo{
+font-size:24px;
+font-weight:bold;
+color:#f97316;
+}
+
+.nav-links a{
+color:white;
+margin:0 15px;
 text-decoration:none;
-font-weight:700;
-padding:8px 10px;
-position:relative;
+font-size:16px;
+transition:0.3s;
 }
 
-.top-nav a::after{
-content:'';
-position:absolute;
-bottom:-4px;
-left:0;
-height:2px;
-width:0;
-background:#fff;
-transition:.3s;
+.nav-links a:hover{
+color:#f97316;
+transform:scale(1.1);
 }
 
-.top-nav a:hover::after{
-width:100%;
-}
-
-.register{
-background:var(--accent);
-padding:10px 14px;
-border-radius:8px;
-}
-
-.login{
-background:rgba(255,255,255,0.15);
-padding:10px 14px;
-border-radius:8px;
-}
-
-/* HERO */
+/* HERO SECTION */
 
 .hero{
-max-width:1300px;
-margin:40px auto;
-padding:60px;
-border-radius:16px;
-display:flex;
-gap:30px;
-position:relative;
-background:#08307a;
-color:#fff;
-overflow:hidden;
+text-align:center;
+padding:120px 20px;
+background:linear-gradient(135deg,#1e293b,#020617);
+animation:fadeIn 2s ease;
 }
 
-/* HERO TEXT ANIMATION */
-
-.hero-card{
-flex:1;
-z-index:5;
-animation:slideUp 1.2s ease;
+.hero h1{
+font-size:48px;
+margin-bottom:20px;
 }
 
-@keyframes slideUp{
-from{
-opacity:0;
-transform:translateY(50px)
-}
-to{
-opacity:1;
-transform:translateY(0)
-}
+.hero p{
+font-size:20px;
+opacity:0.8;
 }
 
-.brand{
-font-size:50px;
-font-weight:900;
-margin:20px 0;
-}
-
-.tag{
+.cta-btn{
+display:inline-block;
+margin-top:30px;
+padding:15px 30px;
+background:#f97316;
+border:none;
+border-radius:8px;
+color:white;
 font-size:18px;
-opacity:.9;
+cursor:pointer;
+transition:0.3s;
+text-decoration:none;
 }
 
-.feature-pills{
+.cta-btn:hover{
+transform:scale(1.1);
+background:#fb923c;
+}
+
+/* HOW IT WORKS SECTION */
+
+.how-it-works{
+padding:80px 20px;
+text-align:center;
+}
+
+.how-it-works h2{
+font-size:36px;
+margin-bottom:50px;
+}
+
+.steps{
 display:flex;
-gap:12px;
-margin-top:20px;
 flex-wrap:wrap;
+justify-content:center;
+gap:40px;
 }
 
-.pill{
-background:rgba(255,255,255,0.1);
-padding:8px 14px;
-border-radius:999px;
+.step{
+background:#1e293b;
+padding:30px;
+border-radius:12px;
+width:260px;
+transition:0.4s;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* FLOATING ICONS */
-
-.floating-icon{
-position:absolute;
-border-radius:16px;
-box-shadow:0 18px 40px rgba(0,0,0,0.3);
-background-size:cover;
+.step:hover{
+transform:translateY(-10px) scale(1.05);
+background:#334155;
 }
 
-.fi-1{
-right:10%;
-top:8%;
-width:110px;
-height:110px;
-background-image:url('/icons/icon-512.png');
-animation:floaty 6s infinite ease-in-out;
+.step i{
+font-size:40px;
+color:#f97316;
+margin-bottom:15px;
 }
 
-.fi-2{
-right:20%;
-bottom:8%;
-width:90px;
-height:90px;
-background-image:url('/icons/icon-192.png');
-animation:floaty 7s infinite ease-in-out;
-}
-
-.fi-3{
-left:6%;
-top:20%;
-width:120px;
-height:120px;
-background-image:url('/icons/icon-512.png');
-animation:floaty 8s infinite ease-in-out;
-}
-
-.fi-4{
-left:12%;
-bottom:10%;
-width:80px;
-height:80px;
-background-image:url('/icons/icon-192.png');
-animation:floaty 5s infinite ease-in-out;
-}
-
-@keyframes floaty{
-0%{transform:translateY(0)}
-50%{transform:translateY(-20px)}
-100%{transform:translateY(0)}
+.step h3{
+margin-bottom:10px;
 }
 
 /* FOOTER */
 
 footer{
-position:fixed;
-bottom:12px;
-left:0;
-right:0;
-display:flex;
-justify-content:center;
+margin-top:80px;
+padding:20px;
+background:#020617;
+text-align:center;
+font-size:14px;
 }
 
-.footer-inner{
-background:#fff;
-padding:12px 18px;
-border-radius:999px;
-display:flex;
-gap:16px;
-align-items:center;
-box-shadow:0 10px 30px rgba(0,0,0,0.15);
-}
+/* ANIMATIONS */
 
-.whatsapp-btn{
-background:#25D366;
-color:#fff;
-padding:10px 14px;
-border-radius:999px;
-text-decoration:none;
-font-weight:800;
-transition:.3s;
-}
-
-.whatsapp-btn:hover{
-transform:scale(1.05);
-}
-
-.install-btn{
-background:var(--accent);
-border:none;
-color:white;
-padding:10px 14px;
-border-radius:999px;
-font-weight:800;
-cursor:pointer;
-transition:.3s;
-}
-
-.install-btn:hover{
-transform:scale(1.05);
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(30px);}
+to{opacity:1;transform:translateY(0);}
 }
 
 /* MOBILE */
 
-@media(max-width:900px){
+@media(max-width:768px){
 
-.hero{
+.navbar{
 flex-direction:column;
-padding:40px;
-text-align:center;
 }
 
-.top-nav{
-position:static;
-justify-content:center;
-margin-bottom:20px;
+.nav-links{
+margin-top:10px;
 }
 
-.brand{
-font-size:38px;
+.steps{
+flex-direction:column;
+align-items:center;
+}
+
+.hero h1{
+font-size:34px;
 }
 
 }
 
 </style>
-
 </head>
 
 <body>
 
-<main class="hero">
+<!-- NAVBAR -->
 
-<nav class="top-nav">
+<div class="navbar">
 
-<a href="/about.html">About</a>
-<a href="/services.html">Services</a>
-<a href="/info.html">Info</a>
-<a href="/contact.html">Contact</a>
+<div class="logo">SpiceSpark</div>
 
-<a class="register" href="/register.html">Register</a>
-<a class="login" href="/login.html">Login</a>
-
-</nav>
-
-<div class="hero-card">
-
-<h1 class="brand">Cook anything with the ingredients you already have</h1>
-
-<p class="tag">
-Enter your ingredients and SpiceSpark instantly generates recipes for you.
-Perfect for beginners and home chefs.
-</p>
-
-<div class="feature-pills">
-
-<div class="pill">AI Recipe Generator</div>
-<div class="pill">Cooking Guides</div>
-<div class="pill">Save Recipes</div>
-
+<div class="nav-links">
+<a href="landing.html">Home</a>
+<a href="about.html">About</a>
+<a href="services.html">Services</a>
+<a href="info.html">Info</a>
+<a href="contact.html">Contact</a>
+<a href="login.html">Login</a>
+<a href="register.html">Register</a>
 </div>
 
 </div>
 
-<div class="hero-visual">
+<!-- HERO -->
 
-<div class="floating-icon fi-1"></div>
-<div class="floating-icon fi-2"></div>
-<div class="floating-icon fi-3"></div>
-<div class="floating-icon fi-4"></div>
+<section class="hero">
+
+<h1>Turn Ingredients Into Delicious Recipes</h1>
+
+<p>Enter what you have in your kitchen and let SpiceSpark generate amazing recipes instantly.</p>
+
+<a class="cta-btn" href="register.html">Sign Up Today</a>
+
+</section>
+
+<!-- HOW IT WORKS -->
+
+<section class="how-it-works">
+
+<h2>How SpiceSpark Works</h2>
+
+<div class="steps">
+
+<div class="step">
+<i class="fas fa-carrot"></i>
+<h3>Enter Ingredients</h3>
+<p>Type the ingredients you already have in your kitchen.</p>
+</div>
+
+<div class="step">
+<i class="fas fa-robot"></i>
+<h3>Generate Recipe</h3>
+<p>SpiceSpark instantly creates a recipe using your ingredients.</p>
+</div>
+
+<div class="step">
+<i class="fas fa-utensils"></i>
+<h3>Cook & Enjoy</h3>
+<p>Follow the steps and cook delicious meals effortlessly.</p>
+</div>
 
 </div>
 
-</main>
+</section>
+
+<!-- FOOTER -->
 
 <footer>
 
-<div class="footer-inner">
-
-<strong>SpiceSpark</strong>
-
-<a class="whatsapp-btn" href="https://wa.me/254759834876">WhatsApp</a>
-
-<button id="installBtn" class="install-btn">Install</button>
-
-</div>
+<p>© 2026 SpiceSpark • Created by Asuke Timothy Junior (Timothy TJ)</p>
 
 </footer>
-
-<script>
-
-/* redirect if logged in */
-
-(function(){
-const m=document.cookie.match('(^|;)\\s*spice_user\\s*=\\s*([^;]+)');
-if(m&&m[2]){
-window.location.href='/user/index.html';
-}
-})();
-
-/* PWA install */
-
-let deferredPrompt;
-
-const installBtn=document.getElementById('installBtn');
-installBtn.style.display='none';
-
-window.addEventListener('beforeinstallprompt',(e)=>{
-e.preventDefault();
-deferredPrompt=e;
-installBtn.style.display='inline-block';
-
-installBtn.addEventListener('click',async()=>{
-deferredPrompt.prompt();
-await deferredPrompt.userChoice;
-installBtn.style.display='none';
-});
-});
-
-</script>
 
 </body>
 </html>
