@@ -5,18 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register - SpiceSpark</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <style>
 
-body{
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
 height:100vh;
 display:flex;
 align-items:center;
 justify-content:center;
-background:linear-gradient(135deg,#020617,#0f172a);
+background:linear-gradient(135deg,#0f172a,#020617);
 overflow:hidden;
 }
 
@@ -25,9 +28,9 @@ overflow:hidden;
 body::before{
 content:"";
 position:absolute;
-width:600px;
-height:600px;
-background:#f97316;
+width:500px;
+height:500px;
+background:#22c55e;
 filter:blur(200px);
 opacity:0.25;
 top:-100px;
@@ -37,9 +40,9 @@ left:-100px;
 body::after{
 content:"";
 position:absolute;
-width:600px;
-height:600px;
-background:#22c55e;
+width:500px;
+height:500px;
+background:#f97316;
 filter:blur(200px);
 opacity:0.25;
 bottom:-100px;
@@ -48,43 +51,40 @@ right:-100px;
 
 /* card */
 
-.register-card{
+.container{
 position:relative;
 background:#020617;
 padding:40px;
-width:380px;
 border-radius:14px;
-box-shadow:0 20px 60px rgba(0,0,0,0.6);
-text-align:center;
+width:380px;
+box-shadow:0 25px 70px rgba(0,0,0,0.6);
 color:white;
+animation:fadeIn 0.8s ease;
 }
 
-.register-card h2{
+h2{
+text-align:center;
+margin-bottom:25px;
 color:#f97316;
-margin-bottom:20px;
 }
 
 /* inputs */
 
-.input-group{
-position:relative;
-margin-bottom:20px;
-}
-
-.input-group input{
+input{
 width:100%;
-padding:12px 40px;
+padding:12px;
+margin-bottom:18px;
 border:none;
 border-radius:8px;
 background:#1e293b;
 color:white;
+font-size:15px;
+transition:0.3s;
 }
 
-.input-group i{
-position:absolute;
-top:12px;
-left:12px;
-color:#94a3b8;
+input:focus{
+outline:none;
+background:#334155;
 }
 
 /* button */
@@ -109,6 +109,7 @@ transform:scale(1.05);
 /* links */
 
 .links{
+text-align:center;
 margin-top:15px;
 font-size:14px;
 }
@@ -122,10 +123,26 @@ text-decoration:none;
 text-decoration:underline;
 }
 
+/* animation */
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* mobile */
+
 @media(max-width:450px){
 
-.register-card{
+.container{
 width:90%;
+padding:30px;
 }
 
 }
@@ -135,26 +152,17 @@ width:90%;
 
 <body>
 
-<div class="register-card">
+<div class="container">
 
-<h2>Create Account</h2>
+<h2>Create Your SpiceSpark Account</h2>
 
-<form method="POST" action="/register">
+<form id="registerForm">
 
-<div class="input-group">
-<i class="fa fa-user"></i>
-<input type="text" name="name" placeholder="Full Name" required>
-</div>
+<input type="text" id="name" placeholder="Full Name" required>
 
-<div class="input-group">
-<i class="fa fa-envelope"></i>
-<input type="email" name="email" placeholder="Email" required>
-</div>
+<input type="email" id="email" placeholder="Email" required>
 
-<div class="input-group">
-<i class="fa fa-lock"></i>
-<input type="password" name="password" placeholder="Password" required>
-</div>
+<input type="password" id="password" placeholder="Password" required>
 
 <button type="submit">Register</button>
 
@@ -162,12 +170,13 @@ width:90%;
 
 <div class="links">
 
-<p>Already have an account?  
-<a href="login.html">Login</a></p>
+<p>Already have an account? <a href="login.html">Login</a></p>
 
 </div>
 
 </div>
+
+<script src="script.js"></script>
 
 </body>
 </html>
