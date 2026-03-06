@@ -20,10 +20,9 @@ display:flex;
 align-items:center;
 justify-content:center;
 background:linear-gradient(135deg,#020617,#0f172a);
-overflow:hidden;
 }
 
-/* animated glow background */
+/* glowing background */
 
 body::before{
 content:"";
@@ -59,7 +58,6 @@ border-radius:14px;
 width:360px;
 box-shadow:0 25px 70px rgba(0,0,0,0.6);
 color:white;
-animation:fadeIn 0.8s ease;
 }
 
 h2{
@@ -79,7 +77,6 @@ border-radius:8px;
 background:#1e293b;
 color:white;
 font-size:15px;
-transition:0.3s;
 }
 
 input:focus{
@@ -123,30 +120,6 @@ text-decoration:none;
 text-decoration:underline;
 }
 
-/* animation */
-
-@keyframes fadeIn{
-from{
-opacity:0;
-transform:translateY(20px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-/* mobile */
-
-@media(max-width:450px){
-
-.container{
-width:90%;
-padding:30px;
-}
-
-}
-
 </style>
 </head>
 
@@ -156,11 +129,11 @@ padding:30px;
 
 <h2>Login to SpiceSpark</h2>
 
-<form id="loginForm">
+<form action="/login" method="POST">
 
-<input type="email" id="email" placeholder="Email" required>
+<input type="email" name="email" id="email" placeholder="Email" required>
 
-<input type="password" id="password" placeholder="Password" required>
+<input type="password" name="password" id="password" placeholder="Password" required>
 
 <button type="submit">Login</button>
 
@@ -168,15 +141,11 @@ padding:30px;
 
 <div class="links">
 
-<p><a href="forgot-password.html">Forgot Password?</a></p>
-
 <p>Don't have an account? <a href="register.html">Register</a></p>
 
 </div>
 
 </div>
-
-<script src="script.js"></script>
 
 </body>
 </html>
