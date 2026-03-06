@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
 <title>SpiceSpark — Learn. Cook. Enjoy.</title>
 
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#f97316">
-
-<link rel="stylesheet" href="/user/style.css">
 
 <style>
 
@@ -19,8 +18,15 @@
 
 body{
 margin:0;
-font-family:Inter, system-ui, -apple-system,'Segoe UI',Roboto;
-background:linear-gradient(180deg,#e6eefc 0%, #f1f5f9 40%);
+font-family:Inter,system-ui;
+background:linear-gradient(180deg,#e6eefc,#f1f5f9);
+overflow-x:hidden;
+animation:fadePage 1s ease;
+}
+
+@keyframes fadePage{
+from{opacity:0}
+to{opacity:1}
 }
 
 /* NAVBAR */
@@ -29,7 +35,6 @@ background:linear-gradient(180deg,#e6eefc 0%, #f1f5f9 40%);
 position:absolute;
 right:22px;
 top:18px;
-z-index:9;
 display:flex;
 gap:18px;
 align-items:center;
@@ -41,32 +46,31 @@ text-decoration:none;
 font-weight:700;
 padding:8px 10px;
 position:relative;
-transition:all .25s ease;
 }
 
 .top-nav a::after{
 content:'';
 position:absolute;
-left:0;
 bottom:-4px;
-width:0%;
+left:0;
 height:2px;
+width:0;
 background:#fff;
-transition:width .3s ease;
+transition:.3s;
 }
 
 .top-nav a:hover::after{
 width:100%;
 }
 
-.top-nav a.login{
-background:rgba(255,255,255,0.15);
+.register{
+background:var(--accent);
 padding:10px 14px;
 border-radius:8px;
 }
 
-.top-nav a.register{
-background:var(--accent);
+.login{
+background:rgba(255,255,255,0.15);
 padding:10px 14px;
 border-radius:8px;
 }
@@ -75,180 +79,130 @@ border-radius:8px;
 
 .hero{
 max-width:1300px;
-margin:36px auto;
-padding:48px;
+margin:40px auto;
+padding:60px;
 border-radius:16px;
 display:flex;
 gap:30px;
 position:relative;
-overflow:hidden;
-
-background-image:url('/icons/landing-bg.png');
-background-size:cover;
-background-position:center;
+background:#08307a;
 color:#fff;
-background-color:#08307a;
-
-animation:fadeUp 1.2s ease;
+overflow:hidden;
 }
 
-@keyframes fadeUp{
-0%{opacity:0;transform:translateY(40px)}
-100%{opacity:1;transform:translateY(0)}
-}
-
-.hero::after{
-content:'';
-position:absolute;
-inset:0;
-z-index:2;
-pointer-events:none;
-background:linear-gradient(135deg, rgba(3,16,70,0.45), rgba(11,91,215,0.28));
-}
+/* HERO TEXT ANIMATION */
 
 .hero-card{
 flex:1;
 z-index:5;
-padding:10px 6px
+animation:slideUp 1.2s ease;
 }
 
-.hero-visual{
-flex:1;
-position:relative;
-display:flex;
-align-items:center;
-justify-content:center
+@keyframes slideUp{
+from{
+opacity:0;
+transform:translateY(50px)
 }
-
-.logo-pill{
-display:inline-block;
-padding:8px 12px;
-background:rgba(0,0,0,0.36);
-color:#fff;
-border-radius:8px;
-font-weight:800
+to{
+opacity:1;
+transform:translateY(0)
+}
 }
 
 .brand{
-font-size:48px;
+font-size:50px;
 font-weight:900;
-margin:18px 0 12px;
-color:#fff;
-line-height:1.02
+margin:20px 0;
 }
 
 .tag{
-color:rgba(255,255,255,0.88);
-font-size:1.05rem;
-margin-bottom:18px
+font-size:18px;
+opacity:.9;
 }
-
-/* FEATURE PILLS */
 
 .feature-pills{
 display:flex;
 gap:12px;
-margin-top:16px;
-flex-wrap:wrap
+margin-top:20px;
+flex-wrap:wrap;
 }
 
 .pill{
-background:rgba(255,255,255,0.06);
-padding:8px 12px;
+background:rgba(255,255,255,0.1);
+padding:8px 14px;
 border-radius:999px;
-font-weight:700;
-color:#fff
 }
 
 /* FLOATING ICONS */
 
 .floating-icon{
 position:absolute;
-background-size:cover;
 border-radius:16px;
-box-shadow:0 18px 40px rgba(2,6,23,0.16);
-opacity:0.95
+box-shadow:0 18px 40px rgba(0,0,0,0.3);
+background-size:cover;
 }
 
 .fi-1{
-right:8%;
-top:6%;
+right:10%;
+top:8%;
 width:110px;
 height:110px;
 background-image:url('/icons/icon-512.png');
-transform:rotate(-12deg);
-animation:floaty 6s ease-in-out infinite
+animation:floaty 6s infinite ease-in-out;
 }
 
 .fi-2{
-right:22%;
-bottom:6%;
-width:88px;
-height:88px;
+right:20%;
+bottom:8%;
+width:90px;
+height:90px;
 background-image:url('/icons/icon-192.png');
-animation:floaty 7s ease-in-out .4s infinite
+animation:floaty 7s infinite ease-in-out;
 }
 
 .fi-3{
 left:6%;
-top:18%;
+top:20%;
 width:120px;
 height:120px;
 background-image:url('/icons/icon-512.png');
-animation:floaty 8s ease-in-out .8s infinite
+animation:floaty 8s infinite ease-in-out;
 }
 
 .fi-4{
 left:12%;
-bottom:12%;
-width:76px;
-height:76px;
+bottom:10%;
+width:80px;
+height:80px;
 background-image:url('/icons/icon-192.png');
-animation:floaty 5.5s ease-in-out .2s infinite
+animation:floaty 5s infinite ease-in-out;
 }
 
 @keyframes floaty{
 0%{transform:translateY(0)}
-50%{transform:translateY(-18px)}
+50%{transform:translateY(-20px)}
 100%{transform:translateY(0)}
 }
 
 /* FOOTER */
 
-footer.landing-footer{
+footer{
 position:fixed;
+bottom:12px;
 left:0;
 right:0;
-bottom:12px;
 display:flex;
 justify-content:center;
-z-index:12
 }
 
 .footer-inner{
-background:rgba(255,255,255,0.98);
+background:#fff;
 padding:12px 18px;
 border-radius:999px;
 display:flex;
-gap:18px;
+gap:16px;
 align-items:center;
-box-shadow:0 10px 30px rgba(2,6,23,0.08)
-}
-
-.footer-actions{
-display:flex;
-gap:12px;
-align-items:center
-}
-
-.pwa-install-btn{
-background:var(--accent);
-color:#fff;
-border:0;
-padding:10px 14px;
-border-radius:999px;
-font-weight:800;
-cursor:pointer
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
 }
 
 .whatsapp-btn{
@@ -257,20 +211,53 @@ color:#fff;
 padding:10px 14px;
 border-radius:999px;
 text-decoration:none;
-font-weight:800
+font-weight:800;
+transition:.3s;
 }
 
-section{
-max-width:1100px;
-margin:80px auto;
-padding:20px
+.whatsapp-btn:hover{
+transform:scale(1.05);
 }
 
-h2{
-color:#08307a
+.install-btn{
+background:var(--accent);
+border:none;
+color:white;
+padding:10px 14px;
+border-radius:999px;
+font-weight:800;
+cursor:pointer;
+transition:.3s;
+}
+
+.install-btn:hover{
+transform:scale(1.05);
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.hero{
+flex-direction:column;
+padding:40px;
+text-align:center;
+}
+
+.top-nav{
+position:static;
+justify-content:center;
+margin-bottom:20px;
+}
+
+.brand{
+font-size:38px;
+}
+
 }
 
 </style>
+
 </head>
 
 <body>
@@ -291,8 +278,6 @@ color:#08307a
 
 <div class="hero-card">
 
-<div class="logo-pill">SpiceSpark</div>
-
 <h1 class="brand">Cook anything with the ingredients you already have</h1>
 
 <p class="tag">
@@ -301,64 +286,39 @@ Perfect for beginners and home chefs.
 </p>
 
 <div class="feature-pills">
+
 <div class="pill">AI Recipe Generator</div>
 <div class="pill">Cooking Guides</div>
 <div class="pill">Save Recipes</div>
-</div>
 
-<p style="margin-top:18px;color:rgba(255,255,255,0.85)">
-Create an account to save and manage your recipes.
-</p>
+</div>
 
 </div>
 
 <div class="hero-visual">
+
 <div class="floating-icon fi-1"></div>
 <div class="floating-icon fi-2"></div>
 <div class="floating-icon fi-3"></div>
 <div class="floating-icon fi-4"></div>
+
 </div>
 
 </main>
 
+<footer>
 
-<section id="about">
-<h2>About SpiceSpark</h2>
-<p>
-SpiceSpark helps you cook delicious meals using the ingredients you already have.
-Simply enter what is in your kitchen and our system generates recipes instantly.
-</p>
-</section>
-
-<section id="services">
-<h2>Services</h2>
-<p>
-Generate recipes, explore cooking guides, and discover new meals from simple ingredients.
-SpiceSpark makes cooking easier and more fun.
-</p>
-</section>
-
-<section id="info">
-<h2>More Information</h2>
-<p>
-SpiceSpark is designed for beginners, students, and anyone who wants to cook smarter.
-</p>
-</section>
-
-
-<footer class="landing-footer">
 <div class="footer-inner">
 
 <strong>SpiceSpark</strong>
 
-<div class="footer-actions">
-<a class="whatsapp-btn" href="https://wa.me/254759834876" target="_blank">WhatsApp</a>
-<button id="footer-install-btn" class="pwa-install-btn">Install</button>
-</div>
+<a class="whatsapp-btn" href="https://wa.me/254759834876">WhatsApp</a>
+
+<button id="installBtn" class="install-btn">Install</button>
 
 </div>
+
 </footer>
-
 
 <script>
 
@@ -373,30 +333,21 @@ window.location.href='/user/index.html';
 
 /* PWA install */
 
-let deferredInstallPrompt=null;
+let deferredPrompt;
 
-const footerInstallBtn=document.getElementById('footer-install-btn');
-if(footerInstallBtn)footerInstallBtn.style.display='none';
+const installBtn=document.getElementById('installBtn');
+installBtn.style.display='none';
 
 window.addEventListener('beforeinstallprompt',(e)=>{
 e.preventDefault();
-deferredInstallPrompt=e;
+deferredPrompt=e;
+installBtn.style.display='inline-block';
 
-if(footerInstallBtn){
-footerInstallBtn.style.display='';
-footerInstallBtn.addEventListener('click',async()=>{
-if(!deferredInstallPrompt)return;
-deferredInstallPrompt.prompt();
-await deferredInstallPrompt.userChoice;
-deferredInstallPrompt=null;
-footerInstallBtn.style.display='none';
+installBtn.addEventListener('click',async()=>{
+deferredPrompt.prompt();
+await deferredPrompt.userChoice;
+installBtn.style.display='none';
 });
-}
-
-});
-
-window.addEventListener('appinstalled',()=>{
-if(footerInstallBtn)footerInstallBtn.style.display='none';
 });
 
 </script>
